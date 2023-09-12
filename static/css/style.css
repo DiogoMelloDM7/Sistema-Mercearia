@@ -1,0 +1,43 @@
+*{
+    margin:0; padding: 0; font-family: Arial, Helvetica, sans-serif;
+}
+
+.secao-de-opcoes{
+    background-color:#f2f1dd; height:100px; display:flex; justify-content: space-around;
+}
+
+.opcao-navbar{
+    color:black; font-size: 1.4rem; font-weight: 700; text-decoration: none; margin-left: 15px; display:flex; align-items: center; background-color:#ccc892; border-radius: 20%; min-width: 7%; justify-content: center; margin-top: 15px; margin-bottom: 15px; 
+}
+
+.opcao-navbar:hover{
+    background-color: #cac35e;  transition: .4s; color:white;
+}
+
+body{
+    background-color:#e6e4c4;
+}
+
+.icone-img{
+    display: flex;
+    flex-direction: column;
+    width: 100px;
+    margin-left: 90%;
+    
+    
+}
+
+.img-sm{
+    width: 100px; height: 100px; margin-top: 50px; background-size: cover;
+}
+
+.img-sm:hover{
+    background-color: #f2f1dd; border-radius: 20%; transition: transform .5s; 
+    cursor: pointer;
+    transform: scale(1.2)rotate(1deg);
+    border: 2px solid #d9d6ab;
+    transform: translate(-3px, -3px);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.699);
+    padding: 10px;
+    
+}

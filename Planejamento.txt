@@ -1,0 +1,42 @@
+Funcionalidades
+
+1- Controle de Estoque
+	Visualização de preços e quantidades dos produtos, entrada de produtos, saida de produtos.	
+
+2- Controle de Vendas
+	Saida de produtos, calculo automatico das vendas, relatorio de vendas, 
+
+3- Controle de Caixa
+	Soma de caixa, saida de dinheiro, entrada de dinheiro
+
+
+-----------------------------------------------------------------------------------------------------------
+Tabelas DB
+
+Produto
+	Id
+	Nome
+	Valor
+	Quantidade
+	Grupo
+
+
+Venda
+	Produto(s)
+	Id
+	Valor
+	Data
+
+
+Relatorio de Vendas
+	Venda(s)
+	Id
+	Data	
+
+
+Relatorio de Caixa
+	Id
+	ValorSistema
+	ValorCaixa
+	SaldoFinal
+	Data

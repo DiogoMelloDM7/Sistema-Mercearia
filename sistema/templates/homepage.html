@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block titulo %}
+Homepage
+{% endblock %}
+
+{% block content %}
+
+<div>
+    <div class='icone-img'>
+        <a href="#">
+            <img class="img-sm" src="{% static 'images/caixa.png' %}" title="CAIXA">
+        </a>
+        <a href="#">
+            <img class="img-sm" src="{% static 'images/estoque.jpg' %}" title="ESTOQUE">
+        </a>
+        <a href="#">
+            <img class="img-sm" src="{% static 'images/relatorio.png' %}" title="RELATÓRIOS">
+        </a>
+        <a href="#">
+            <img class="img-sm" src="{% static 'images/vendas.png' %}" title='VENDAS'>
+        </a>
+    </div>
+<div>
+
+{% endblock %}
