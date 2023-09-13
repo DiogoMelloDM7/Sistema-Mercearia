@@ -41,3 +41,104 @@ body{
     padding: 10px;
     
 }
+
+.inserir-item-venda{
+    margin-left: 5%; margin-right: 5%; margin-top: 75px; 
+}
+
+.input-produto{
+    width:350px; height:40px; border-radius: 5px; border: none; margin: 10px;font-size:1.5rem;
+}
+
+.label-vendas{
+    font-size: 1.5rem; font-weight: 600;
+}
+
+.input{
+    width: 200px; height: 40px; border:none; border-radius: 5px; margin:10px; font-size:1.5rem;
+}
+
+.btn-add{
+    width:100px; height: 40px; background-color: rgb(0, 172, 0);color:white; border: none; border-radius: 10px; margin-left: 20px;
+}
+
+.btn-add:hover{
+    background-color: rgb(0, 100, 0); transition: .5s; cursor: pointer; 
+}
+
+.lista-item-venda{
+    margin-left: 5%; margin-right: 5%; margin-top: 75px; 
+}
+
+.span-produto{
+    background-color: white;border-radius: 5px; margin:10px; padding:10px 150px; font-size: 1.4rem; font-weight: 700; margin:10px 20px;
+}
+
+.span{
+    background-color: white; padding:10px 50px; border-radius:5px;
+    font-size: 1.4rem; font-weight: 700; margin:10px 20px;
+}
+
+.btn-del{
+    width:100px; height: 40px; background-color: rgb(231, 0, 0);color:white; border: none; border-radius: 10px; margin-left: 20px; margin-top: 25px;margin-bottom: 25px;
+}
+
+.btn-del:hover{
+    background-color: rgb(134, 9, 0); transition: .5s; cursor: pointer; 
+}
+
+.btn-prosseguir-vendas{
+    text-align: center; background-color: green; color: white;
+    width: 300px; height: 70px; border: none; border-radius: 10px;
+     font-size: 1.3rem; font-weight: bold; cursor: pointer;
+    
+}
+
+.link-btn{
+    text-decoration: none; margin-top: 20px;
+}
+
+.btn-prosseguir-vendas:hover{
+    background-color: rgb(1, 201, 1); transition: .5s;
+}
+
+.div-link-btn{
+    display: flex; justify-content: center;
+}
+
+.label-relatorios{
+    font-size: 1.5rem; font-weight: 700; margin-left:50px; margin-right:10px;
+}
+
+.input-data{
+    width: 180px; height: 40px; border: none; border-radius: 5px; font-size: 1.4rem; margin-right: 50px;
+}
+
+.input-data2{
+    width: 250px; height: 40px; border: none; border-radius: 5px; font-size: 1.4rem; margin-right: 50px; margin-top: 20px;
+}
+
+.busca-data{
+    margin-left: 5%; margin-right: 5%; margin-top: 50px; text-align: center;
+}
+
+.busca-data > h1{
+    margin-bottom: 25px;
+}
+
+.resultado-relatorios{
+    display: flex; justify-content: space-around;
+}
+
+.relatorio-capa{
+    background-color: rgba(255, 255, 255, 0.747); width: 180px; height: 250px; border-radius: 10px; display: flex; flex-direction: column;
+}
+
+.item-capa-relatorio{
+    font-size: 1.2rem; font-weight: 600; padding: 35% 10px; text-align: center; margin-top: 15px; text-decoration: none; color: black;  cursor: pointer;
+}
+
+.relatorio-capa:hover{
+    background-color: rgba(255, 255, 255, 0.411); transition: .5s;
+    cursor: pointer;
+}

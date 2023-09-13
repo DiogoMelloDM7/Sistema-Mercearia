@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block titulo %}
+Relatórios
+{% endblock %}
+
+{% block content %}
+
+<div class='main'>
+
+    <div class='busca-data'>
+        <h1>Filtre seus resultados pelas datas de início e fim</h1>
+        <form method='post'>
+            {% csrf_token %}
+        
+        <label class="label-relatorios" for="iddatainicio">Data Inicial</label>
+        <input class="input-data" id='iddatainicio' name='datainicio' type="date">
+        <label class="label-relatorios" for="iddatafinal">Data Final</label>
+        <input class='input-data' id='iddatafinal' name='datafinal' type="date"><br>
+        <label class="label-relatorios" for="idrelatorio">Escolha o tipo de relatório</label>
+        <select class="input-data2" name='relatorio' id='idrelatorio'>
+            <option class="input-data" value="relatorio-caixa">Relatório de Vendas</option>
+            <option class="input-data" value="relatorio-vendas">Relatório de Caixa</option>
+        </select>
+        <button type="button" class="btn-add">BUSCAR</button>
+        </form>
+    </div>
+
+    <div style='background-color: black; height:2px; margin-top:20px; margin-bottom:20px;'>
+    </div>
+
+    <div class='resultado-relatorios'>
+        <div class='relatorio-capa'>
+            <a href="#" class='item-capa-relatorio'>
+            <span class='item-capa-relatorio'>Data</span><br>
+            <span class='item-capa-relatorio'>Valor</span><br>
+            <span class='item-capa-relatorio'>Saldo Caixa</span>
+            </a>
+        </div>
+        <div class='relatorio-capa'>
+            <a href="#" class='item-capa-relatorio'>
+            <span class='item-capa-relatorio'>Data</span><br>
+            <span class='item-capa-relatorio'>Valor</span><br>
+            <span class='item-capa-relatorio'>Saldo Caixa</span>
+            </a>
+        </div>
+        <div class='relatorio-capa'>
+            <a href="#" class='item-capa-relatorio'>
+            <span class='item-capa-relatorio'>Data</span><br>
+            <span class='item-capa-relatorio'>Valor</span><br>
+            <span class='item-capa-relatorio'>Saldo Caixa</span>
+        </a>
+        </div>
+    </div>
+
+    
+<div>
+
+{% endblock %}

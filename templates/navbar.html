@@ -1,8 +1,9 @@
 <nav>
     <div class='secao-de-opcoes'>
-        <a class="opcao-navbar" href="#">Vendas</a>
-        <a class="opcao-navbar" href="#">Relatórios</a>
-        <a class="opcao-navbar" href="#">Estoque</a>
-        <a class="opcao-navbar" href="#">Caixa</a>
+        <a class="opcao-navbar" href="{% url 'sistema:homepage' %}">Início</a>
+        <a class="opcao-navbar" href="{% url 'sistema:vendas' %}">Vendas</a>
+        <a class="opcao-navbar" href="{% url 'sistema:relatorios' %}">Relatórios</a>
+        <a class="opcao-navbar" href="{% url 'sistema:estoque' %}">Estoque</a>
+        <a class="opcao-navbar" href="{% url 'sistema:caixa' %}">Caixa</a>
     </div>
 </nav>

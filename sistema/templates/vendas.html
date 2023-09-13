@@ -10,7 +10,45 @@ Vendas
 
 <div class='main'>
 
-    <h1>Teste</h1>
+    <div class="inserir-item-venda">
+        <form method="post">
+            {% csrf_token %}
+            <label for="idproduto" class='label-vendas'>Item</label>
+            <input id='idproduto' name='produto' type='text' class='input-produto'>
+            <label for="idquantidade" class='label-vendas'>Quantidade</label>
+            <input id="idquantidade" name='quantidade' type='number' class='input'>
+            <label for="idvalor" class='label-vendas'>Valor</label>
+            <input id="idvalor" name'valor' type='text' class='input'>
+            <button type='button' class='btn-add'>ADD</button>
+
+        </form>
+    </div>
+    <div style='background-color: black; height:2px; margin-top:10px; margin-bottom:10px;'>
+    </div>
+
+    <div class='lista-item-venda'>
+        <div>
+            <span class="span-produto">Produto</span>
+            <span class="span">Quantidade</span>
+            <span class="span">Valor</span>
+            <button type="button" class="btn-del">DELETE</button>
+        </div>
+        <div>
+            <span class="span-produto">Produto</span>
+            <span class="span">Quantidade</span>
+            <span class="span">Valor</span>
+            <button type="button" class="btn-del">DELETE</button>
+        </div>
+        <div>
+            <span class="span-produto">Produto</span>
+            <span class="span">Quantidade</span>
+            <span class="span">Valor</span>
+            <button type="button" class="btn-del">DELETE</button>
+        </div>
+    </div>
+    <div class='div-link-btn'>
+    <a href="#" class='link-btn' ><button class="btn-prosseguir-vendas">Seguir para a forma de pagamento</button><a>
+    </div>
     
 <div>
 

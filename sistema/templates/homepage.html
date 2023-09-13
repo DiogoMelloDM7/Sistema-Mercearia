@@ -10,16 +10,16 @@ Homepage
 
 <div>
     <div class='icone-img'>
-        <a href="#">
+        <a href="{% url 'sistema:caixa' %}">
             <img class="img-sm" src="{% static 'images/caixa.png' %}" title="CAIXA">
         </a>
-        <a href="#">
+        <a href="{% url 'sistema:estoque' %}">
             <img class="img-sm" src="{% static 'images/estoque.jpg' %}" title="ESTOQUE">
         </a>
-        <a href="#">
+        <a href="{% url 'sistema:relatorios' %}">
             <img class="img-sm" src="{% static 'images/relatorio.png' %}" title="RELATÓRIOS">
         </a>
-        <a href="#">
+        <a href="{% url 'sistema:vendas' %}">
             <img class="img-sm" src="{% static 'images/vendas.png' %}" title='VENDAS'>
         </a>
     </div>
