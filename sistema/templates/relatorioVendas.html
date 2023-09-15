@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block titulo %}
+Relatório de Vendas
+{% endblock %}
+
+{% block content %}
+
+<div>
+    <div style="height: 50px;">
+    </div>
+    <table>
+        <tr>
+            <th style="width: 300px;">DESCRIÇÃO <th style="width: 150px;">CRÉDITO
+        </tr>
+        {% for venda in object.vendas.all %}
+        <tr>
+            <th>{{ venda }} <th>{{ venda.valor }}
+        </tr>
+        {% endfor %}
+        <tr>
+            <th>VALOR TOTAL <th> R$ Valor
+        </tr>
+    </table>
+    <div class="div-botao-voltar">
+        <a href="{% url 'sistema:relatorios' %}">
+        <button class="btn-voltar">
+            VOLTAR
+        </button>
+    </a>
+    </div>
+</div>
+
+{% endblock %}

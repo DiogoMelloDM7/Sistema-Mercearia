@@ -3,14 +3,128 @@
 
 
 {% block titulo %}
-Caixa
+Relatório de Caixa
 {% endblock %}
 
 {% block content %}
 
 <div class='main'>
 
-    <h1>Teste</h1>
+    <div class='tabela-soma-caixa'>
+        <form method='post'>
+            {% csrf_token %}
+        <table>
+            <tr>
+                <th>Quantidade de cédulas/moedas<th>Valor<th>Valor total
+            </tr>
+            <!-- for produto in produtos -->
+            <tr>
+                <td> <input type="number">
+                <td> R$ 0,05
+                <td> Resultado
+            </tr>
+            <tr>
+                <td><input type="number">
+                <td> R$ 0,10
+                <td>Resultado
+            </tr>
+            <tr>
+                <td> <input type="number">
+                <td> R$ 0,25
+                <td> Resultado
+            </tr>
+            <tr>
+                <td><input type="number">
+                <td> R$ 0,50
+                <td>Resultado
+            </tr>
+            <tr>
+                <td> <input type="number">
+                <td> R$ 1,00
+                <td> Resultado
+            </tr>
+            <tr>
+                <td><input type="number">
+                <td> R$ 2,00
+                <td>Resultado
+            </tr>
+            <tr>
+                <td> <input type="number">
+                <td> R$ 5,00
+                <td> Resultado
+            </tr>
+            <tr>
+                <td><input type="number">
+                <td> R$ 10,00
+                <td>Resultado
+            </tr>
+            <tr>
+                <td> <input type="number">
+                <td> R$ 20,00
+                <td> Resultado
+            </tr>
+            <tr>
+                <td><input type="number">
+                <td> R$ 50,00
+                <td>Resultado
+            </tr>
+            <tr>
+                <td><input type="number">
+                <td> R$ 100,00
+                <td>Resultado
+            </tr>
+
+        </table>
+        <button type="submit" name="calcula-valor" class='btn-calc'>Calcular </button>
+        <button onclick="mostrarSaidaEntrada(event)" class='btn-back' style="width:200px;">Informar saída ou entrada </button>
+    </form>
+    </div>
+        <div>
+            <table>
+                <tr>
+                    <th>Saldo de vendas<th>Valor em caixa<th>Valor em cartões<th>Saldo final 
+                </tr>
+                <!-- for produto in produtos -->
+                <tr>
+                    <td> R$ 980,00
+                    <td> R$ 965,00
+                    <td> R$ 10,00
+                    <td> - R$ 5,00
+                    
+    
+                </tr>
+    
+            </table>
+        </div>
+        <div class='resultado-soma-caixa'>
+            <button type="submit" name="save-relatorio" class='btn-save'>Salvar relatório</button>
+            
+            <button type="button" class='btn-back'><a href="{% url 'sistema:homepage' %}">Sair sem salvar</a></button>
+        </div>
+    </div>
+
+</div>
+<div id="oculta" class="ocultar">
+<div style='background-color: black; height:2px; margin-top:10px; margin-bottom:10px;'>
+</div>
+<div class="saida-caixa">
+    
+    <form>
+        <label class="label-vendas" for="iddescricao-saida">Descrição</label>
+        <input class="input-produto" type="text" name="descricao-saida" id='iddescricao-saida' placeholder="Informe a descrição da saída"><br>
+        <label class="label-vendas" for="idvalor-saida">Valor</label>
+        <input class="input" type="text" name="valor-saida" id="idvalor-saida" placeholder="Informe o valor"><br>
+        <button type="submit" name="confirm-exit" class="btn-del" style="width: 200px;">Confirmar saída</button>
+    </form>
+    <form>
+        <label class="label-vendas" for="iddescricao-entrada">Descrição</label>
+        <input class="input-produto" type="text" name="descricao-entrada" id='iddescricao-entrada' placeholder="Informe a descrição da entrada"><br>
+        <label class="label-vendas" for="idvalor-saida">Valor</label>
+        <input class="input" type="text" name="valor-entrada" id="idvalor-entrada" placeholder="Informe o valor"><br>
+        <button type="submit" name="confirm-deposit" class="btn-calc">Confirmar entrada</button>
+    </form>
+</div>
+</div>
     
 <div>
 

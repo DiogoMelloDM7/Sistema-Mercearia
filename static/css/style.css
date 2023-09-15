@@ -142,3 +142,93 @@ body{
     background-color: rgba(255, 255, 255, 0.411); transition: .5s;
     cursor: pointer;
 }
+
+.busca-add-produto{
+    display: flex; justify-content: space-evenly; align-items: center; margin-top: 25px; margin-bottom: 25px;
+}
+
+.add-produto{
+    background-color: rgb(0, 123, 172); color:white; border: none; border-radius: 10px; width: 200px; height: 40px; cursor: pointer; 
+}
+
+.add-produto:hover{
+    background-color: rgb(1, 44, 61); transition: .5s;
+}
+
+.input-produto{
+    width: 350px; height: 40px; border: none; border-radius: 5px;
+}
+
+table{
+    height:20px;
+    border-collapse: collapse; /* Essa propriedade faz com que a tabela fique próxima, ajustando como deve ficar */
+    background-color: rgba(209, 209, 209, 0.438);
+    margin:auto;
+}
+td, th {
+    border: 1px solid black;
+    padding: 12px;
+}
+
+.produto-tabela{
+    width: 250px;
+}
+
+.tabela-soma-caixa{
+    display: flex; justify-content: center; 
+}
+
+.resultado-soma-caixa{
+    display: flex; justify-content: space-around
+}
+
+.btn-calc{
+    width:200px; height: 40px; background-color: rgb(0, 172, 0);color:white; border: none; border-radius: 10px; margin-left: 20px; margin-top: 30px; margin-bottom: 30px;
+}
+
+.btn-calc:hover{
+    background-color: rgb(0, 100, 0); transition: .5s; cursor: pointer; 
+}
+.btn-save{
+    width:20%;height: 40px; background-color: rgb(0, 172, 0);color:white; border: none; border-radius: 10px; margin-left: 20px; margin-top: 30px; margin-bottom: 30px;
+}
+
+.btn-save:hover{
+    background-color: rgb(0, 100, 0); transition: .5s; cursor: pointer; 
+}
+
+.btn-back{
+    width:20%;height: 40px; background-color: rgb(62, 128, 250);color:white; border: none; border-radius: 10px; margin-left: 20px; margin-top: 30px; margin-bottom: 30px;
+}
+
+.btn-back:hover{
+    background-color: rgb(1, 32, 88); transition: .5s; cursor: pointer; 
+}
+
+.form-saida{
+    display: flex; justify-content: center; margin-top: 150px;
+}
+
+.saida-caixa{
+    display: flex; justify-content: center;
+}
+
+.btn-back > a {
+    text-decoration: none; color:white;
+}
+
+.ocultar{
+    display: none;
+}
+
+.div-botao-voltar{
+    display: flex; justify-content: center; margin-top: 100px;
+}
+
+.btn-voltar{
+    background-color: rgb(73, 73, 73); width: 250px; height: 50px; border-radius: 10px; border: none;  cursor: pointer;color:white; text-decoration: none; text-align: center; font-size: 1.3rem;
+}
+
+.btn-voltar:hover{
+    transition: .5s;background-color: rgb(173, 172, 172);
+}

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block titulo %}
+Relatório de Caixa
+{% endblock %}
+
+{% block content %}
+
+<div>
+    <div style="height: 50px;">
+    </div>
+    <table>
+        <tr>
+            <th style="width: 300px;">DESCRIÇÃO <th style="width: 150px;">CRÉDITO<th style="width: 150px;">DÉBITO
+        </tr>
+        {% for credit in object.credito.all %}
+        <tr>
+            <th>{{ credit }} <th>{{ credit.valor }}<th>
+        </tr>
+        {% endfor %}
+        {% for debit in object.debito.all %}
+        <tr>
+            <th>{{ debit }} <th><th>{{ debit.valor }}
+        </tr>
+        {% endfor %}
+        <tr>
+            <th>Valor total de vendas<th>Valor de Vendas<th>
+        </tr>
+        <tr>
+            <th colspan="2">Valor total<th> R$ VALOR TOTAL
+        </tr>
+    </table>
+    <div style='background-color: black; height:2px; margin-top:50px; margin-bottom:50px;'>
+    </div>
+    <table>
+        <tr>
+            <th>VALOR NO SISTEMA<th>VALOR EM CAIXA<th>SALDO FINAL
+        </tr>
+        <tr>
+            <th style="width: 250px;">{{ object.valorSistema }}<th style="width: 250px;">{{ object.valorCaixa }}<th style="width: 250px;">{{ object.saldoFinal }}
+        </tr>
+    </table>
+<div class="div-botao-voltar">
+    <a href="{% url 'sistema:relatorios' %}">
+    <button class="btn-voltar">
+        VOLTAR
+    </button>
+</a>
+</div>
+</div>
+
+{% endblock %}
