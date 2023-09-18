@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block titulo %}
+Editar Produto
+{% endblock %}
+
+{% block content %}
+
+<div class="main-cadastrar-produto">
+
+    {% if messages %}
+    {% for message in messages %}
+        <div id="error-message" class="{% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% endif %}" style="display: none;">             
+                    <span>{{ message }}<span>
+        </div>
+        {% endfor %}
+    {% endif %}
+    
+    <h1 class="title-cadastrar-produto">EDITAR PRODUTO</h1>
+    <h2 class="subtitle-editar-produto">{{ object.nome }} <br> Código {{ object.id }}</h2>
+    
+    
+    <form class="form-cadastrar-produto" method="post">
+        {% csrf_token %}
+        <input type="hidden" value={{ object.id }} name="id">
+        <label for="idnome-produto">Nome do Produto</label>
+        <input type="text" name="nome-produto" id="idnome-produto" placeholder="Insira o nome do produto" required value="{{ object.nome }}"><br>
+        <label for="idgrupo-produto">Grupo</label>
+        <input type="text" name="grupo-produto" id="idgrupo-produto" placeholder="Insira o grupo do produto" required value="{{ object.grupo }}"><br>
+        <label for="idpreco-custo">Preço de Custo</label>
+        <input type="text" name="preco-custo" id="idpreco-custo"placeholder="Insira o preço de custo" required value={{ object.valor_custo }}><br>
+        <label for="idpreco-venda">Preço de Venda</label>
+        <input type="text" name="preco-venda" id="idpreco-venda" placeholder="Insira o preço de venda" required value={{ object.valor_venda }}><br>
+        <label for="idquantidade">Quantidade de Itens</label>
+        <input type="text" name="quantidade" id="idquantidade" placeholder="Insira a quantidade de itens" required value={{ object.quantidade }}><br>
+        <button class="btn-save-produto" value="edit" name="confirm" type="submit">Confirmar Edição</button>
+        <button name="confirm" value="del" class="btn-del-produto" type="submit">Confirmar Exclusão</button>
+    </form>
+</div>
+
+{% endblock %}

@@ -8,13 +8,22 @@ Estoque
 
 {% block content %}
 
+{% if messages %}
+    {% for message in messages %}
+        <div id="error-message" class="{% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% endif %}" style="display: none;">             
+                    <span>{{ message }}<span>
+        </div>
+        {% endfor %}
+    {% endif %}
+
 <div>
     <div class="busca-add-produto">
-        <a href="#">
-        <div >
+        <a href="{% url "sistema:cadastrarProduto" %}">
+        <div>
             <button type="button" class="add-produto">ADICIONAR PRODUTO</button>
         </div>
         </a>
+        
         <div class="buscar-produto">
             <form method='post'>
                 {% csrf_token %}
@@ -30,7 +39,7 @@ Estoque
     <div class='exibe-produtos'>
         <table>
             <tr>
-                <th>PRODUTO<th>GRUPO<th>QUANTIDADE EM ESTOQUE <th>PREÇO DE VENDA <th>PREÇO DE CUSTO
+                <th>PRODUTO<th>GRUPO<th>QUANTIDADE EM ESTOQUE <th>PREÇO DE VENDA <th>PREÇO DE CUSTO<th>CÓDIGO PRODUTO <th> CLIQUE AQUI PARA EDITAR
             </tr>
             {% for produto in object_list %}
             <tr>
@@ -39,6 +48,13 @@ Estoque
                 <td> {{ produto.quantidade }} unidades
                 <td> {{ produto.valor_venda }}
                 <td> {{ produto.valor_custo }}
+                <td> {{ produto.id }}
+                <td>
+                <a href="{% url "sistema:editarProduto" produto.id %}">
+                    <div>
+                        <button type="button" class="add-produto">EDITAR PRODUTO</button>
+                    </div>
+                </a>
 
             </tr>
             {% endfor %}

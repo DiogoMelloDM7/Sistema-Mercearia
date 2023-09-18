@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block titulo %}
+Cadastrar Produto
+{% endblock %}
+
+{% block content %}
+
+<div class="main-cadastrar-produto">
+    {% if messages %}
+    {% for message in messages %}
+        <div id="error-message" class="{% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% endif %}" style="display: none;">
+                    <span>{{ message }}<span>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    
+    <h1 class="title-cadastrar-produto">CADASTRE UM NOVO PRODUTO</h1>
+    
+    
+    <form class="form-cadastrar-produto" method="post">
+        {% csrf_token %}
+        <label for="idnome-produto">Nome do Produto</label>
+        <input type="text" name="nome-produto" id="idnome-produto" placeholder="Insira o nome do produto" required><br>
+        <label for="idgrupo-produto">Grupo</label>
+        <input type="text" name="grupo-produto" id="idgrupo-produto" placeholder="Insira o grupo do produto" required><br>
+        <label for="idpreco-custo">Preço de Custo</label>
+        <input type="text" name="preco-custo" id="idpreco-custo"placeholder="Insira somente números e virgulas. EX 15,99" required><br>
+        <label for="idpreco-venda">Preço de Venda</label>
+        <input type="text" name="preco-venda" id="idpreco-venda" placeholder="Insira somente números e virgulas. EX 19,00" required><br>
+        <label for="idquantidade">Quantidade de Itens</label>
+        <input type="text" name="quantidade" id="idquantidade" placeholder="Insira a quantidade de itens" required><br>
+        <button class="btn-save-produto" type="submit">Cadastrar</button>
+    </form>
+
+</div>
+
+{% endblock %}
