@@ -19,63 +19,107 @@ Relatório de Caixa
             </tr>
             <!-- for produto in produtos -->
             <tr>
-                <td> <input type="number">
+                <td> <input type="number" name="5-cent" required>
                 <td> R$ 0,05
-                <td> Resultado
+                <td>{% if cent5 %} 
+                    R$ {{ cent5|floatformat:"2" }}
+                    {% else %}
+                    Resultado
+                    {% endif %}
             </tr>
             <tr>
-                <td><input type="number">
+                <td><input type="number" name="10-cent" required>
                 <td> R$ 0,10
-                <td>Resultado
+                <td>{% if cent10 %} 
+                    R$ {{ cent10|floatformat:"2" }}
+                    {% else %}
+                    Resultado
+                    {% endif %}
             </tr>
             <tr>
-                <td> <input type="number">
+                <td> <input type="number" name="25-cent" required>
                 <td> R$ 0,25
-                <td> Resultado
+                <td> {% if cent25 %} 
+                    R$ {{ cent25|floatformat:"2" }}
+                    {% else %}
+                    Resultado
+                    {% endif %}
             </tr>
             <tr>
-                <td><input type="number">
+                <td><input type="number" name="50-cent" required>
                 <td> R$ 0,50
-                <td>Resultado
+                <td>{% if cent50 %} 
+                    R$ {{ cent50|floatformat:"2" }}
+                    {% else %}
+                    Resultado
+                    {% endif %}
             </tr>
             <tr>
-                <td> <input type="number">
+                <td> <input type="number" name="1-real" required>
                 <td> R$ 1,00
-                <td> Resultado
+                <td> {% if real1 %} 
+                    R$ {{ real1|floatformat:"2" }}
+                    {% else %}
+                    Resultado
+                    {% endif %}
             </tr>
             <tr>
-                <td><input type="number">
+                <td><input type="number" name="2-real" required>
                 <td> R$ 2,00
-                <td>Resultado
+                <td>{% if real2 %} 
+                    R$ {{ real2|floatformat:"2" }}
+                    {% else %}
+                    Resultado
+                    {% endif %}
             </tr>
             <tr>
-                <td> <input type="number">
+                <td> <input type="number" name="5-real" required>
                 <td> R$ 5,00
-                <td> Resultado
+                <td> {% if real5 %} 
+                    R$ {{ real5|floatformat:"2" }}
+                    {% else %}
+                    Resultado
+                    {% endif %}
             </tr>
             <tr>
-                <td><input type="number">
+                <td><input type="number" name="10-real" required>
                 <td> R$ 10,00
-                <td>Resultado
+                <td>{% if real10 %} 
+                    R$ {{ real10|floatformat:"2" }}
+                    {% else %}
+                    Resultado
+                    {% endif %}
             </tr>
             <tr>
-                <td> <input type="number">
+                <td> <input type="number" name="20-real" required>
                 <td> R$ 20,00
-                <td> Resultado
+                <td>{% if real20 %} 
+                    R$ {{ real20|floatformat:"2" }}
+                    {% else %}
+                    Resultado
+                    {% endif %}
             </tr>
             <tr>
-                <td><input type="number">
+                <td><input type="number" name="50-real" required>
                 <td> R$ 50,00
-                <td>Resultado
+                <td>{% if real50 %} 
+                    R$ {{ real50|floatformat:"2" }}
+                    {% else %}
+                    Resultado
+                    {% endif %}
             </tr>
             <tr>
-                <td><input type="number">
+                <td><input type="number" name="100-real" required>
                 <td> R$ 100,00
-                <td>Resultado
+                <td>{% if real100 %} 
+                    R$ {{ real100|floatformat:"2" }}
+                    {% else %}
+                    Resultado
+                    {% endif %}
             </tr>
 
         </table>
-        <button type="submit" name="calcula-valor" class='btn-calc'>Calcular </button>
+        <button type="submit" value="calcula-valor" name="confirm" class='btn-calc'>Calcular </button>
         <button onclick="mostrarSaidaEntrada(event)" class='btn-back' style="width:200px;">Informar saída ou entrada </button>
     </form>
     </div>
@@ -86,10 +130,10 @@ Relatório de Caixa
                 </tr>
                 <!-- for produto in produtos -->
                 <tr>
-                    <td> R$ 980,00
-                    <td> R$ 965,00
+                    <td> R$ {{ relatorio.valorSistema|floatformat:"2" }}
+                    <td> R$ {{ relatorio.valorCaixa|floatformat:"2" }}
                     <td> R$ 10,00
-                    <td> - R$ 5,00
+                    <td> R$ {{ relatorio.saldoFinal|floatformat:"2" }}
                     
     
                 </tr>
@@ -97,9 +141,8 @@ Relatório de Caixa
             </table>
         </div>
         <div class='resultado-soma-caixa'>
-            <button type="submit" name="save-relatorio" class='btn-save'>Salvar relatório</button>
             
-            <button type="button" class='btn-back'><a href="{% url 'sistema:homepage' %}">Sair sem salvar</a></button>
+            <button type="button" class='btn-back'><a href="{% url 'sistema:homepage' %}">Voltar a página inicial</a></button>
         </div>
     </div>
 
@@ -109,23 +152,24 @@ Relatório de Caixa
 </div>
 <div class="saida-caixa">
     
-    <form>
+    <form method="post" autocomplete="off">
+        {% csrf_token %}
         <label class="label-vendas" for="iddescricao-saida">Descrição</label>
-        <input class="input-produto" type="text" name="descricao-saida" id='iddescricao-saida' placeholder="Informe a descrição da saída"><br>
+        <input class="input-produto" type="text" name="descricao-saida" id='iddescricao-saida' placeholder="Informe a descrição da saída" required><br>
         <label class="label-vendas" for="idvalor-saida">Valor</label>
-        <input class="input" type="text" name="valor-saida" id="idvalor-saida" placeholder="Informe o valor"><br>
-        <button type="submit" name="confirm-exit" class="btn-del" style="width: 200px;">Confirmar saída</button>
+        <input class="input" type="text" name="valor-saida" id="idvalor-saida" placeholder="Informe o valor" required><br>
+        <button type="submit" name="confirm" value="confirm-exit" class="btn-del" style="width: 200px;">Confirmar saída</button>
     </form>
-    <form>
+    <form method='post' autocomplete="off">
+        {% csrf_token %}
         <label class="label-vendas" for="iddescricao-entrada">Descrição</label>
-        <input class="input-produto" type="text" name="descricao-entrada" id='iddescricao-entrada' placeholder="Informe a descrição da entrada"><br>
+        <input class="input-produto" type="text" name="descricao-entrada" id='iddescricao-entrada' placeholder="Informe a descrição da entrada" required><br>
         <label class="label-vendas" for="idvalor-saida">Valor</label>
-        <input class="input" type="text" name="valor-entrada" id="idvalor-entrada" placeholder="Informe o valor"><br>
-        <button type="submit" name="confirm-deposit" class="btn-calc">Confirmar entrada</button>
+        <input class="input" type="text" name="valor-entrada" id="idvalor-entrada" placeholder="Informe o valor" required><br>
+        <button type="submit" name="confirm" value="confirm-deposit" class="btn-calc">Confirmar entrada</button>
     </form>
 </div>
 </div>
     
 <div>
-
 {% endblock %}
