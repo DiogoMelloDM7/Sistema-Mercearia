@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import DetailView, ListView
-from .models import RelatorioVendas, RelatorioCaixa, Produto
+from .models import RelatorioVendas, RelatorioCaixa, Produto, Credito, Debito
 from django.contrib import messages
 from django.urls import reverse
 from django.db.models import Q
@@ -12,8 +12,48 @@ def homepage(request):
     return render(request, "homepage.html")
 
 
-def vendas(request):
-    return render(request, "vendas.html")
+lista_vendas = []
+class Vendas(ListView):
+    template_name = "vendas.html"
+    model = Produto
+
+    def post(self, request, *args, **kwargs):
+        button_type = request.POST.get("confirm")
+        valor_total_venda = 0
+        if button_type == "search":
+            termo_busca = request.POST.get("busca-produto","")
+            if termo_busca:
+                produtos = Produto.objects.filter(Q(nome__icontains=termo_busca) | Q(grupo__icontains=termo_busca))
+            else:
+                produtos = Produto.objects.all()
+            return render(request, self.template_name, {"object_list":produtos, "itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
+        if button_type == "add":
+            id_produto = request.POST.get("produto")
+            quantidade = request.POST.get("quantidade")
+            valor = request.POST.get("valor")
+            produto = Produto.objects.filter(pk=id_produto).first()
+            #try:
+            if valor:
+                quantidade = int(quantidade)
+                valor = valor.replace(",",".")
+                valor = float(valor)
+            else:
+                valor = 0
+            #except:
+                #messages.error(request, "Ocorreu um erro ao processar os dados inseridos, verifique os dados e #tente novamente!")
+                #return render(request, self.template_name)
+            valor_total = quantidade * valor
+            
+            itens_do_pedido = (produto.nome, quantidade, valor, valor_total)
+            lista_vendas.append(itens_do_pedido)
+            for item in lista_vendas:
+                valor_total_venda += item[3]
+            return render(request, self.template_name, {"itens_venda":lista_vendas, "valor_total_venda": valor_total_venda})
+
+
+        
+        
+
 
 def relatorios(request):
     return render(request, "relatorios.html")
@@ -105,12 +145,14 @@ def caixa(request):
             relatorio = RelatorioCaixa.objects.filter(data__date=data_hoje).first()
             if not relatorio:
                 valor = Decimal(valor)
-                RelatorioCaixa.objects.create(valorSistema=(-valor), saldoFinal=0, saldoCaixa=0)
+                relatorio = RelatorioCaixa.objects.create(valorSistema=(-valor), saldoFinal=0, saldoCaixa=0)
+                Credito.objects.create(descricao=descricao, valor=valor, relatorio_caixa=relatorio)
             else:
                 valor = Decimal(valor)
                 relatorio.valorSistema -= valor
                 relatorio.saldoFinal = relatorio.valorCaixa - relatorio.valorSistema
                 relatorio.save()
+                Debito.objects.create(descricao=descricao, valor=valor, relatorio_caixa=relatorio)
             return render(request, "caixa.html", {"relatorio":relatorio})
 
         if button_type == "confirm-deposit":
@@ -120,12 +162,15 @@ def caixa(request):
             relatorio = RelatorioCaixa.objects.filter(data__date=data_hoje).first()
             if not relatorio:
                 valor = Decimal(valor)
-                RelatorioCaixa.objects.create(valorSistema=(valor), saldoFinal=0, saldoCaixa=0)
+                relatorio = RelatorioCaixa.objects.create(valorSistema=(valor), saldoFinal=0, saldoCaixa=0)
+                Credito.objects.create(descricao=descricao, valor=valor, relatorio_caixa=relatorio)
+                
             else:
                 valor = Decimal(valor)
                 relatorio.valorSistema += valor
                 relatorio.saldoFinal = relatorio.valorCaixa - relatorio.valorSistema
                 relatorio.save()
+                Credito.objects.create(descricao=descricao, valor=valor, relatorio_caixa=relatorio)
             return render(request, "caixa.html", {"relatorio":relatorio})
 
     return render(request, "caixa.html")

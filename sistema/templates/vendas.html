@@ -8,43 +8,94 @@ Vendas
 
 {% block content %}
 
+{% if messages %}
+    {% for message in messages %}
+        <div id="error-message" class="{% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% endif %}" style="display: none;">             
+                    <span>{{ message }}<span>
+        </div>
+        {% endfor %}
+{% endif %}
+
 <div class='main'>
 
     <div class="inserir-item-venda">
         <form method="post">
             {% csrf_token %}
-            <label for="idproduto" class='label-vendas'>Item</label>
-            <input id='idproduto' name='produto' type='text' class='input-produto'>
+            <label for="idproduto" class='label-vendas'>Código Item</label>
+            <input id='idproduto' name='produto' type='text' class='input-produto' placeholder="Insira aqui o código do produto" required>
             <label for="idquantidade" class='label-vendas'>Quantidade</label>
-            <input id="idquantidade" name='quantidade' type='number' class='input'>
-            <label for="idvalor" class='label-vendas'>Valor</label>
-            <input id="idvalor" name'valor' type='text' class='input'>
-            <button type='button' class='btn-add'>ADD</button>
+            <input id="idquantidade" name='quantidade' type='number' class='input' required>
+            <label for="idvalor" class='label-vendas'>Valor Unitário</label>
+            <input id="idvalor" name='valor' type='text' class='input' required>
+            <button type='submit' name="confirm" value="add" class='btn-add'>ADD</button>
 
         </form>
     </div>
     <div style='background-color: black; height:2px; margin-top:10px; margin-bottom:10px;'>
     </div>
 
+    <div class='exibe-produtos'>
+        <div class="buscar-produto" style="margin-left: 20%;">
+            <form method='post'>
+                {% csrf_token %}
+                <input type="text" name="busca-produto" id='idbusca-produto' placeholder="Busque pelo produto ou grupo desejado" class='input-produto'> 
+                <button type="submit" name="confirm" value="search" class='btn-add'>BUSCAR</button>
+            </form>
+        </div>
+        <table>
+            <tr>
+                <th>PRODUTO<th>GRUPO<th>QUANTIDADE EM ESTOQUE <th>PREÇO DE VENDA <th>PREÇO DE CUSTO<th>CÓDIGO PRODUTO
+            </tr>
+            {% for produto in object_list %}
+            <tr>
+                <td class="produto-tabela"> {{ produto.nome }}
+                <td> {{ produto.grupo }}
+                <td> {{ produto.quantidade }} unidades
+                <td> {{ produto.valor_venda }}
+                <td> {{ produto.valor_custo }}
+                <td> {{ produto.id }}
+
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div style='background-color: black; height:2px; margin-top:10px; margin-bottom:10px;'>
+    </div>
+
     <div class='lista-item-venda'>
+        {% if itens_venda %}
+            <table>
+                <tr>
+                    <th>PRODUTO <th>QUANTIDADE <th>VALOR UNITÁRIO <th> VALOR TOTAL <th> CLIQUE AQUI PARA REMOVER
+                </tr>
+                <tr>
+            {% for item in itens_venda %}
+            <div>
+                
+                
+                {% for individual in item%}
+            
+                <th>{{ individual }}
+                
+                {% endfor %}
+                <th><button type="button" class="btn-del">DELETE</button>
+                </tr>
+            </div>
+            {% endfor %}
+            <tr>
+                <th colspan="3"> VALOR TOTAL DA VENDA <th colspan="2">R$ {{ valor_total_venda|floatformat:"2" }}
+            </tr>
+            </table>
+        {% else %}
         <div>
             <span class="span-produto">Produto</span>
             <span class="span">Quantidade</span>
             <span class="span">Valor</span>
             <button type="button" class="btn-del">DELETE</button>
         </div>
-        <div>
-            <span class="span-produto">Produto</span>
-            <span class="span">Quantidade</span>
-            <span class="span">Valor</span>
-            <button type="button" class="btn-del">DELETE</button>
-        </div>
-        <div>
-            <span class="span-produto">Produto</span>
-            <span class="span">Quantidade</span>
-            <span class="span">Valor</span>
-            <button type="button" class="btn-del">DELETE</button>
-        </div>
+        {% endif %}
+        
     </div>
     <div class='div-link-btn'>
     <a href="#" class='link-btn' ><button class="btn-prosseguir-vendas">Seguir para a forma de pagamento</button><a>
