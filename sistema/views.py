@@ -32,16 +32,15 @@ class Vendas(ListView):
             quantidade = request.POST.get("quantidade")
             valor = request.POST.get("valor")
             produto = Produto.objects.filter(pk=id_produto).first()
-            #try:
-            if valor:
-                quantidade = int(quantidade)
-                valor = valor.replace(",",".")
-                valor = float(valor)
-            else:
-                valor = 0
-            #except:
-                #messages.error(request, "Ocorreu um erro ao processar os dados inseridos, verifique os dados e #tente novamente!")
-                #return render(request, self.template_name)
+            try:
+                if valor:
+                    quantidade = int(quantidade)
+                    valor = valor.replace(",",".")
+                    valor = float(valor)
+            
+            except:
+                messages.error(request, "Ocorreu um erro ao processar os dados inseridos, verifique os dados e tente novamente!")
+                return render(request, self.template_name, {"itens_venda":lista_vendas, "valor_total_venda": valor_total_venda})
             valor_total = quantidade * valor
             
             itens_do_pedido = (produto.nome, quantidade, valor, valor_total)
@@ -49,6 +48,22 @@ class Vendas(ListView):
             for item in lista_vendas:
                 valor_total_venda += item[3]
             return render(request, self.template_name, {"itens_venda":lista_vendas, "valor_total_venda": valor_total_venda})
+        if button_type == "del":
+            indice = request.POST.get("indice")
+            try: 
+                indice = int(indice)
+                indice -= 1
+            except:
+                indice = None
+            try:
+                if indice:
+                    lista_vendas.pop(indice)
+                else:
+                    lista_vendas.pop(0)
+                
+                return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
+            except: 
+                return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
 
 
         

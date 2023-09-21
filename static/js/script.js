@@ -19,5 +19,12 @@ function showErrorMessage() {
 showErrorMessage();
 
 
+function formaPagamento(event){
+    event.preventDefault();
+    let divPrincipal = document.getElementById("main-vendas")
+    let divSecundaria = document.getElementById("main-vendas-2")
+    divPrincipal.style.display="none";
+    divSecundaria.style.display="block";
 
+}
 

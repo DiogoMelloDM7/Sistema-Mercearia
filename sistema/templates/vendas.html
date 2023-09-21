@@ -16,8 +16,8 @@ Vendas
         {% endfor %}
 {% endif %}
 
-<div class='main'>
-
+<div>
+<div id='main-vendas'>
     <div class="inserir-item-venda">
         <form method="post">
             {% csrf_token %}
@@ -79,7 +79,11 @@ Vendas
                 <th>{{ individual }}
                 
                 {% endfor %}
-                <th><button type="button" class="btn-del">DELETE</button>
+                <form method="post">
+                {% csrf_token %}
+                <input type="hidden" value="{{ forloop.counter }}" name="indice">
+                <th><button type="submit" name="confirm" value="del" class="btn-del">DELETE</button>
+                </form>
                 </tr>
             </div>
             {% endfor %}
@@ -98,9 +102,26 @@ Vendas
         
     </div>
     <div class='div-link-btn'>
-    <a href="#" class='link-btn' ><button class="btn-prosseguir-vendas">Seguir para a forma de pagamento</button><a>
+    <a href="#" class='link-btn' ><button class="btn-prosseguir-vendas" onclick="formaPagamento(event)">Seguir para a forma de pagamento</button><a>
+    </div>
+</div>
+<div>
+</div>
+<div id="main-vendas-2" style="display:none;">
+    <div class="pagamento">
+        <h1>SELECIONE SUA FORMA DE PAGAMENTO</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="pagamento-input">
+            <label for="idcartao">CARTÃO</label>
+            <input type="radio" value="cartao" name="pagamento" id="idcartao">
+            </div>
+            <div class="pagamento-input">
+            <label for="iddinheiro">DINHEIRO</label>
+            <input type="radio" value="dinheiro" name="pagamento" id="iddinheiro"><br>
+            </div>
+            <button type="submit" class="sales-confirm" name="confirm" value="confirm-sale">CONFIRMAR VENDA</button>
+        </form>
     </div>
     
-<div>
-
 {% endblock %}
