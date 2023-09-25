@@ -8,6 +8,14 @@ Relatório de Caixa
 
 {% block content %}
 
+{% if messages %}
+    {% for message in messages %}
+        <div id="error-message" class="{% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% endif %}" style="display: none;">             
+                    <span>{{ message }}<span>
+        </div>
+        {% endfor %}
+{% endif %}
+
 <div class='main'>
 
     <div class='tabela-soma-caixa'>
@@ -19,12 +27,12 @@ Relatório de Caixa
             </tr>
             <!-- for produto in produtos -->
             <tr>
-                <td> <input type="number" name="5-cent" required>
+                <td> <input type="number" name="5-cent" required value={{ campo1 }}>
                 <td> R$ 0,05
                 <td>{% if cent5 %} 
                     R$ {{ cent5|floatformat:"2" }}
                     {% else %}
-                    Resultado
+                    R$ 0,00
                     {% endif %}
             </tr>
             <tr>
@@ -33,7 +41,7 @@ Relatório de Caixa
                 <td>{% if cent10 %} 
                     R$ {{ cent10|floatformat:"2" }}
                     {% else %}
-                    Resultado
+                    R$ 0,00
                     {% endif %}
             </tr>
             <tr>
@@ -42,7 +50,7 @@ Relatório de Caixa
                 <td> {% if cent25 %} 
                     R$ {{ cent25|floatformat:"2" }}
                     {% else %}
-                    Resultado
+                    R$ 0,00
                     {% endif %}
             </tr>
             <tr>
@@ -51,7 +59,7 @@ Relatório de Caixa
                 <td>{% if cent50 %} 
                     R$ {{ cent50|floatformat:"2" }}
                     {% else %}
-                    Resultado
+                    R$ 0,00
                     {% endif %}
             </tr>
             <tr>
@@ -60,7 +68,7 @@ Relatório de Caixa
                 <td> {% if real1 %} 
                     R$ {{ real1|floatformat:"2" }}
                     {% else %}
-                    Resultado
+                    R$ 0,00
                     {% endif %}
             </tr>
             <tr>
@@ -69,7 +77,7 @@ Relatório de Caixa
                 <td>{% if real2 %} 
                     R$ {{ real2|floatformat:"2" }}
                     {% else %}
-                    Resultado
+                    R$ 0,00
                     {% endif %}
             </tr>
             <tr>
@@ -78,7 +86,7 @@ Relatório de Caixa
                 <td> {% if real5 %} 
                     R$ {{ real5|floatformat:"2" }}
                     {% else %}
-                    Resultado
+                    R$ 0,00
                     {% endif %}
             </tr>
             <tr>
@@ -87,7 +95,7 @@ Relatório de Caixa
                 <td>{% if real10 %} 
                     R$ {{ real10|floatformat:"2" }}
                     {% else %}
-                    Resultado
+                    R$ 0,00
                     {% endif %}
             </tr>
             <tr>
@@ -96,7 +104,7 @@ Relatório de Caixa
                 <td>{% if real20 %} 
                     R$ {{ real20|floatformat:"2" }}
                     {% else %}
-                    Resultado
+                    R$ 0,00
                     {% endif %}
             </tr>
             <tr>
@@ -105,7 +113,7 @@ Relatório de Caixa
                 <td>{% if real50 %} 
                     R$ {{ real50|floatformat:"2" }}
                     {% else %}
-                    Resultado
+                    R$ 0,00
                     {% endif %}
             </tr>
             <tr>
@@ -114,7 +122,7 @@ Relatório de Caixa
                 <td>{% if real100 %} 
                     R$ {{ real100|floatformat:"2" }}
                     {% else %}
-                    Resultado
+                    R$ 0,00
                     {% endif %}
             </tr>
 
@@ -132,13 +140,16 @@ Relatório de Caixa
                 <tr>
                     <td> R$ {{ relatorio.valorSistema|floatformat:"2" }}
                     <td> R$ {{ relatorio.valorCaixa|floatformat:"2" }}
-                    <td> R$ 10,00
+                    <td> R$ {{ relatorio.valorCartao|floatformat:"2" }}
                     <td> R$ {{ relatorio.saldoFinal|floatformat:"2" }}
                     
     
                 </tr>
     
             </table>
+            <div class="aviso-caixa">
+                <p>O saldo acima é referente aos valores de entradas e saídas do dia de hoje somente</p>
+            </div>
         </div>
         <div class='resultado-soma-caixa'>
             

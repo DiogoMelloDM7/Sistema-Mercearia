@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import DetailView, ListView
-from .models import RelatorioVendas, RelatorioCaixa, Produto, Credito, Debito
+from .models import RelatorioVendas, RelatorioCaixa, Produto, Credito, Debito, Venda, ItensVenda, Cartao
 from django.contrib import messages
 from django.urls import reverse
 from django.db.models import Q
@@ -12,6 +12,10 @@ def homepage(request):
     return render(request, "homepage.html")
 
 
+def limpa_lista_vendas():
+    global lista_vendas
+    lista_vendas = []
+
 lista_vendas = []
 class Vendas(ListView):
     template_name = "vendas.html"
@@ -19,6 +23,7 @@ class Vendas(ListView):
 
     def post(self, request, *args, **kwargs):
         button_type = request.POST.get("confirm")
+        
         valor_total_venda = 0
         if button_type == "search":
             termo_busca = request.POST.get("busca-produto","")
@@ -60,10 +65,49 @@ class Vendas(ListView):
                     lista_vendas.pop(indice)
                 else:
                     lista_vendas.pop(0)
+                for item in lista_vendas:
+                    valor_total_venda += item[3]
                 
                 return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
             except: 
                 return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
+        if button_type == "confirm-sale":
+            if lista_vendas:
+                data_hoje = date.today()
+                relatorio_venda = RelatorioVendas.objects.filter(data__date=data_hoje).first()
+                if not relatorio_venda:
+                    relatorio_venda = RelatorioVendas.objects.create(valorfinal = 0)
+                venda = Venda.objects.create(relatorio = relatorio_venda, valor = 0)
+                
+                for item in lista_vendas:
+                    nome_produto = item[0]
+                    quantidade = item[1]
+                    valor_total_venda += item[3]
+                    produto = Produto.objects.filter(nome=nome_produto).first()
+                    produto.quantidade -= quantidade
+                    produto.save()
+                    ItensVenda.objects.create(venda=venda, produto = produto, quantidade = quantidade)
+                venda.valor = Decimal(valor_total_venda)
+                venda.save()
+                forma_pagamento = request.POST.get("pagamento")
+                data_hoje = date.today()
+                relatorio = RelatorioCaixa.objects.filter(data__date=data_hoje).first()
+                if not relatorio:
+                    relatorio = RelatorioCaixa.objects.create(valorCaixa=0, valorSistema=Decimal(valor_total_venda), saldoFinal=0, valorCartao=0)
+                else:
+                    relatorio.valorSistema += Decimal(valor_total_venda)
+                    relatorio.save()
+                if forma_pagamento == "cartao":
+                    relatorio.valorCartao += Decimal(valor_total_venda)
+                    relatorio.save()
+                    Cartao.objects.create(valor=Decimal(valor_total_venda), venda=venda)
+                relatorio_venda.valorfinal += Decimal(valor_total_venda)
+                limpa_lista_vendas()
+                return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
+            else:
+                messages.error(request, "Para finalizar uma venda, você precisa inserir algum item!")
+                return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
+
 
 
         
@@ -148,7 +192,7 @@ def caixa(request):
                 RelatorioCaixa.objects.create(valorCaixa=total, valorSistema=0, saldoFinal=0)
             else:
                 relatorio.valorCaixa = total
-                relatorio.saldoFinal = relatorio.valorCaixa - relatorio.valorSistema
+                relatorio.saldoFinal = (relatorio.valorCaixa + relatorio.valorCartao) - relatorio.valorSistema
                 relatorio.save()
 
             return render(request, "caixa.html", {"cent5": cent5, "cent10": cent10, "cent25": cent25, "cent50": cent50, "real1": real1, "real2": real2, "real5": real5, "real10": real10, "real20": real20, "real50": real50, "real100": real100, "total":total, "relatorio": relatorio})
@@ -158,16 +202,21 @@ def caixa(request):
             valor = request.POST.get("valor-saida")
             data_hoje = date.today()
             relatorio = RelatorioCaixa.objects.filter(data__date=data_hoje).first()
-            if not relatorio:
-                valor = Decimal(valor)
-                relatorio = RelatorioCaixa.objects.create(valorSistema=(-valor), saldoFinal=0, saldoCaixa=0)
-                Credito.objects.create(descricao=descricao, valor=valor, relatorio_caixa=relatorio)
-            else:
-                valor = Decimal(valor)
-                relatorio.valorSistema -= valor
-                relatorio.saldoFinal = relatorio.valorCaixa - relatorio.valorSistema
-                relatorio.save()
-                Debito.objects.create(descricao=descricao, valor=valor, relatorio_caixa=relatorio)
+            try:
+                if not relatorio:
+                    valor = valor.replace(",",".")
+                    valor = Decimal(valor)
+                    relatorio = RelatorioCaixa.objects.create(valorSistema=(-valor), saldoFinal=0, saldoCaixa=0)
+                    Credito.objects.create(descricao=descricao, valor=valor, relatorio_caixa=relatorio)
+                else:
+                    valor = valor.replace(",",".")
+                    valor = Decimal(valor)
+                    relatorio.valorSistema -= valor
+                    relatorio.saldoFinal = relatorio.valorCaixa - relatorio.valorSistema
+                    relatorio.save()
+                    Debito.objects.create(descricao=descricao, valor=valor, relatorio_caixa=relatorio)
+            except:
+                messages.error(request, "Ocorreu um erro ao debitar o valor, verifique os dados inseridos e tente novamente por favor!")
             return render(request, "caixa.html", {"relatorio":relatorio})
 
         if button_type == "confirm-deposit":
@@ -175,17 +224,22 @@ def caixa(request):
             valor = request.POST.get("valor-entrada")
             data_hoje = date.today()
             relatorio = RelatorioCaixa.objects.filter(data__date=data_hoje).first()
-            if not relatorio:
-                valor = Decimal(valor)
-                relatorio = RelatorioCaixa.objects.create(valorSistema=(valor), saldoFinal=0, saldoCaixa=0)
-                Credito.objects.create(descricao=descricao, valor=valor, relatorio_caixa=relatorio)
-                
-            else:
-                valor = Decimal(valor)
-                relatorio.valorSistema += valor
-                relatorio.saldoFinal = relatorio.valorCaixa - relatorio.valorSistema
-                relatorio.save()
-                Credito.objects.create(descricao=descricao, valor=valor, relatorio_caixa=relatorio)
+            try:
+                if not relatorio:
+                    valor = valor.replace(",",".")
+                    valor = Decimal(valor)
+                    relatorio = RelatorioCaixa.objects.create(valorSistema=(valor), saldoFinal=0, saldoCaixa=0)
+                    Credito.objects.create(descricao=descricao, valor=valor, relatorio_caixa=relatorio)
+                    
+                else:
+                    valor = valor.replace(",",".")
+                    valor = Decimal(valor)
+                    relatorio.valorSistema += valor
+                    relatorio.saldoFinal = relatorio.valorCaixa - relatorio.valorSistema
+                    relatorio.save()
+                    Credito.objects.create(descricao=descricao, valor=valor, relatorio_caixa=relatorio)
+            except:
+                messages.error(request, "Ocorreu um erro ao creditar o valor, verifique os dados inseridos e tente novamente por favor!")
             return render(request, "caixa.html", {"relatorio":relatorio})
 
     return render(request, "caixa.html")

@@ -44,6 +44,7 @@ class RelatorioVendas(models.Model):
 class RelatorioCaixa(models.Model):
     valorSistema = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True) 
     valorCaixa = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True) 
+    valorCartao = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True) 
     saldoFinal = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True) 
     data = models.DateTimeField(default=timezone.now)
 
@@ -67,3 +68,11 @@ class Debito(models.Model):
 
     def __str__(self): 
         return self.descricao + " - Relatório " + f"{self.relatorio_caixa.pk}"
+
+
+class Cartao(models.Model):
+    valor = models.DecimalField(max_digits=10, decimal_places=2) 
+    venda = models.ForeignKey("Venda", related_name='cartao', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "Cartão de R$ " + f"{self.valor}" + " referente a venda de ID " + f"{self.venda}"

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Venda, Produto, RelatorioCaixa, RelatorioVendas, ItensVenda, Credito, Debito
+from .models import Venda, Produto, RelatorioCaixa, RelatorioVendas, ItensVenda, Credito, Debito, Cartao
 
 # Register your models here.
 
@@ -10,3 +10,4 @@ admin.site.register(RelatorioVendas)
 admin.site.register(ItensVenda)
 admin.site.register(Credito)
 admin.site.register(Debito)
+admin.site.register(Cartao)
