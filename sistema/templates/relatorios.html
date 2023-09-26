@@ -16,15 +16,15 @@ Relatórios
             {% csrf_token %}
         
         <label class="label-relatorios" for="iddatainicio">Data Inicial</label>
-        <input class="input-data" id='iddatainicio' name='datainicio' type="date">
+        <input class="input-data" id='iddatainicio' name='datainicio' type="date" required>
         <label class="label-relatorios" for="iddatafinal">Data Final</label>
-        <input class='input-data' id='iddatafinal' name='datafinal' type="date"><br>
+        <input class='input-data' id='iddatafinal' name='datafinal' type="date" required><br>
         <label class="label-relatorios" for="idrelatorio">Escolha o tipo de relatório</label>
         <select class="input-data2" name='relatorio' id='idrelatorio'>
-            <option class="input-data" value="relatorio-caixa">Relatório de Vendas</option>
-            <option class="input-data" value="relatorio-vendas">Relatório de Caixa</option>
+            <option class="input-data" value="relatorio-vendas">Relatório de Vendas</option>
+            <option class="input-data" value="relatorio-caixa">Relatório de Caixa</option>
         </select>
-        <button type="button" class="btn-add">BUSCAR</button>
+        <button type="submit" class="btn-add">BUSCAR</button>
         </form>
     </div>
 
@@ -32,27 +32,30 @@ Relatórios
     </div>
 
     <div class='resultado-relatorios'>
-        <div class='relatorio-capa'>
-            <a href="#" class='item-capa-relatorio'>
-            <span class='item-capa-relatorio'>Data</span><br>
-            <span class='item-capa-relatorio'>Valor</span><br>
-            <span class='item-capa-relatorio'>Saldo Caixa</span>
+        {% for relatorio in lista_relatorios_caixa %}
+        <div class="relatorio-capa">
+            <a href="#" class="item-capa-relatorio">
+            <span class='item-capa-relatorio'>Data <br>{{ relatorio.0 }}</span><br>
+            <div style='background-color: black; height:2px; margin-top:20px; margin-bottom:20px;'>
+            </div>
+            <span class='item-capa-relatorio'>Valor Sistema<br> R$ {{ relatorio.1 }}</span><br>
+            <div style='background-color: black; height:2px; margin-top:20px; margin-bottom:20px;'>
+            </div>
+            <span class='item-capa-relatorio'>Valor Caixa<br> R$ {{ relatorio.2 }}</span>
             </a>
         </div>
-        <div class='relatorio-capa'>
-            <a href="#" class='item-capa-relatorio'>
-            <span class='item-capa-relatorio'>Data</span><br>
-            <span class='item-capa-relatorio'>Valor</span><br>
-            <span class='item-capa-relatorio'>Saldo Caixa</span>
+        {% endfor %}
+        {% for relatorio in lista_relatorios_venda %}
+        <div class="relatorio-capa">
+            <a href="#" class="item-capa-relatorio">
+            <span class='item-capa-relatorio'>Data <br> <br>{{ relatorio.0 }}</span><br>
+            <div style='background-color: black; height:2px; margin-top:20px; margin-bottom:20px;'>
+            </div>
+            <span class='item-capa-relatorio'>Valor <br> <br> R$ {{ relatorio.1 }}</span>
             </a>
         </div>
-        <div class='relatorio-capa'>
-            <a href="#" class='item-capa-relatorio'>
-            <span class='item-capa-relatorio'>Data</span><br>
-            <span class='item-capa-relatorio'>Valor</span><br>
-            <span class='item-capa-relatorio'>Saldo Caixa</span>
-        </a>
-        </div>
+        {% endfor %}
+        
     </div>
 
     

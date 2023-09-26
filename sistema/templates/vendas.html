@@ -107,8 +107,26 @@ Vendas
 <div id="main-vendas-2" style="display:none;">
     <div class="pagamento">
         <h1>SELECIONE SUA FORMA DE PAGAMENTO</h1>
-        <form method="post">
+        <form method="post" id="myForm">
             {% csrf_token %}
+            <script>
+                document.getElementById("myForm").addEventListener("submit", function(event) {
+                    var radios = document.getElementsByName("pagamento");
+                    var selected = false;
+            
+                    for (var i = 0; i < radios.length; i++) {
+                        if (radios[i].checked) {
+                            selected = true;
+                            break;
+                        }
+                    }
+            
+                    if (!selected) {
+                        event.preventDefault();
+                        alert("Por favor, selecione pelo menos uma opção de pagamento.");
+                    }
+                });
+            </script>
             <div class="pagamento-input">
             <label for="idcartao">CARTÃO</label>
             <input type="radio" value="cartao" name="pagamento" id="idcartao">
@@ -117,6 +135,13 @@ Vendas
             <label for="iddinheiro">DINHEIRO</label>
             <input type="radio" value="dinheiro" name="pagamento" id="iddinheiro"><br>
             </div>
+            <div class="pagamento-input-2">
+                <label for="idcartao-dinheiro">CARTÃO + DINHEIRO</label>
+                <input type="radio" value="dinheiro+cartao" name="pagamento" id="idcartao+dinheiro"><br>
+                <input type="text" placeholder="Insira o valor pago no dinheiro" name="valor-dinheiro"><br>
+                <input type="text" placeholder="Insira o valor pago no cartão" name="valor-cartao">
+            </div>
+            
             <button type="submit" class="sales-confirm" name="confirm" value="confirm-sale">CONFIRMAR VENDA</button>
         </form>
     </div>

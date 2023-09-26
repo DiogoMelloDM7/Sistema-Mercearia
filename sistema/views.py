@@ -4,8 +4,8 @@ from .models import RelatorioVendas, RelatorioCaixa, Produto, Credito, Debito, V
 from django.contrib import messages
 from django.urls import reverse
 from django.db.models import Q
-from datetime import date
-from decimal import Decimal
+from datetime import date, datetime
+from decimal import Decimal, ROUND_DOWN
 
 
 def homepage(request):
@@ -85,6 +85,9 @@ class Vendas(ListView):
                     valor_total_venda += item[3]
                     produto = Produto.objects.filter(nome=nome_produto).first()
                     produto.quantidade -= quantidade
+                    if produto.quantidade < 0:
+                        messages.error(request, f"O item {nome_produto} não possui estoque suficiente para completar essa venda!")
+                        return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
                     produto.save()
                     ItensVenda.objects.create(venda=venda, produto = produto, quantidade = quantidade)
                 venda.valor = Decimal(valor_total_venda)
@@ -101,8 +104,32 @@ class Vendas(ListView):
                     relatorio.valorCartao += Decimal(valor_total_venda)
                     relatorio.save()
                     Cartao.objects.create(valor=Decimal(valor_total_venda), venda=venda)
-                relatorio_venda.valorfinal += Decimal(valor_total_venda)
                 limpa_lista_vendas()
+                if forma_pagamento == "dinheiro+cartao":
+                    try:
+                        valor_dinheiro = request.POST.get('valor-dinheiro')
+                        valor_cartao = request.POST.get('valor-cartao')
+                        valor_dinheiro = valor_dinheiro.replace(",",".")
+                        valor_cartao = valor_cartao.replace(",",".")
+                        valor_cartao = Decimal(valor_cartao)
+                        valor_dinheiro = Decimal(valor_dinheiro)
+                        valor_total_venda = Decimal(valor_total_venda)
+                        decimal_context = Decimal('0.01')
+                        # Quantize os valores com duas casas decimais
+                        valor_total_venda = valor_total_venda.quantize(decimal_context, rounding=ROUND_DOWN)
+                        valor_cartao = valor_cartao.quantize(decimal_context, rounding=ROUND_DOWN)
+                        valor_dinheiro = valor_dinheiro.quantize(decimal_context, rounding=ROUND_DOWN)
+                        if (valor_cartao + valor_dinheiro) != valor_total_venda:
+                            messages.error(request, "Valor inserido não bate com o valor da compra, verifique os dados e tente novamente!")
+                            return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
+                        relatorio.valorCartao += valor_cartao
+                        relatorio.save()
+                        Cartao.objects.create(valor=Decimal(valor_cartao), venda=venda)
+                        relatorio_venda.valorfinal += Decimal(valor_cartao)
+                    except:
+                        messages.error(request, "Verifique os dados inseridos e tente novamente, use apenas numeros e ponto ou virgula! Exemplo 15,99 ou 7.99!")
+                relatorio_venda.valorfinal += Decimal(valor_total_venda)
+                relatorio_venda.save()
                 return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
             else:
                 messages.error(request, "Para finalizar uma venda, você precisa inserir algum item!")
@@ -115,7 +142,29 @@ class Vendas(ListView):
 
 
 def relatorios(request):
-    return render(request, "relatorios.html")
+    lista_relatorios_caixa = []
+    lista_relatorios_venda = []
+    if request.method == "POST":
+        tipo_relatorio = request.POST.get('relatorio')
+        data_inicial = request.POST.get("datainicio")
+        data_final = request.POST.get("datafinal")
+
+        # Converta as datas em objetos de data do Python
+        data_inicial = datetime.strptime(data_inicial, "%Y-%m-%d").date()
+        data_final = datetime.strptime(data_final, "%Y-%m-%d").date()
+
+        if tipo_relatorio == "relatorio-caixa":
+            # Consulta para relatório de caixa entre datas
+            relatorios_caixa = RelatorioCaixa.objects.filter(data__date__range=(data_inicial, data_final))
+            lista_relatorios_caixa = [(relatorio.data.date(), relatorio.valorSistema, relatorio.valorCaixa) for relatorio in relatorios_caixa]
+
+        elif tipo_relatorio == "relatorio-vendas":
+            # Consulta para relatório de vendas entre datas
+            relatorios_vendas = RelatorioVendas.objects.filter(data__date__range=(data_inicial, data_final))
+            lista_relatorios_venda = [(relatorio.data.date(), relatorio.valorfinal) for relatorio in relatorios_vendas]
+
+    return render(request, "relatorios.html", {"lista_relatorios_venda": lista_relatorios_venda, "lista_relatorios_caixa": lista_relatorios_caixa})
+
 
 
 class Estoque(ListView):
