@@ -2,12 +2,34 @@
     margin:0; padding: 0; font-family: Arial, Helvetica, sans-serif;
 }
 
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px #e6e4c4; 
+    border-radius: 10px;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #afaf6f; 
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #999782a2; 
+  }
+
 .secao-de-opcoes{
     background-color:#f2f1dd; height:100px; display:flex; justify-content: space-around;
 }
 
 .opcao-navbar{
-    color:black; font-size: 1.4rem; font-weight: 700; text-decoration: none; margin-left: 15px; display:flex; align-items: center; background-color:#ccc892; border-radius: 20%; min-width: 7%; justify-content: center; margin-top: 15px; margin-bottom: 15px; 
+    color:black; font-size: 1.4rem; font-weight: 700; text-decoration: none; margin-left: 15px; display:flex; align-items: center; background-color:#ccc892; border-radius: 20%; min-width: 7%; justify-content: center; margin-top: 15px; margin-bottom: 15px; padding: 5px 20px;
 }
 
 .opcao-navbar:hover{
@@ -22,7 +44,8 @@ body{
     display: flex;
     flex-direction: column;
     width: 100px;
-    margin-left: 90%;
+    margin-left: auto; margin-right: 30px;
+    justify-content: flex-end;
     
     
 }
@@ -127,11 +150,11 @@ body{
 }
 
 .resultado-relatorios{
-    display: flex; justify-content: space-around;
+    display: flex; justify-content: space-around; flex-wrap: wrap;
 }
 
 .relatorio-capa{
-    background-color: rgba(255, 255, 255, 0.747); width: 180px; min-height: 250px; border-radius: 10px; display: flex; flex-direction: column;
+    background-color: rgba(255, 255, 255, 0.747); width: 180px; min-height: 250px; border-radius: 10px; display: flex; flex-direction: column; margin: 20px 50px;
 }
 
 .item-capa-relatorio{
@@ -210,7 +233,7 @@ td, th {
 }
 
 .saida-caixa{
-    display: flex; justify-content: center;
+    display: flex; justify-content: center; flex-wrap: wrap;
 }
 
 .btn-back > a {
@@ -234,7 +257,7 @@ td, th {
 }
 
 .main-cadastrar-produto{
-    display: flex; flex-direction: column; background-color: rgba(255, 255, 255, 0.555); margin-left: 20%; margin-right: 20%; height: 89.5vh;
+    display: flex; flex-direction: column; background-color: rgba(255, 255, 255, 0.555); margin-left: 20%; margin-right: 20%; min-height: 89.5vh;
 }
 
 .title-cadastrar-produto{
@@ -332,4 +355,57 @@ td, th {
 }
 .pagamento-input-2 > label{
      font-size: 2rem; margin-bottom: 10px;
+}
+
+
+@media screen and (max-width: 1400px) {
+    
+    .main-cadastrar-produto{
+        display: flex; flex-direction: column; background-color: rgba(255, 255, 255, 0.555); margin-left: 20%; margin-right: 20%; min-height: 89.5vh;
+    }
+    
+    .title-cadastrar-produto{
+        font-size:2.8rem; text-align: center; color: rgba(0, 0, 0, 0.678); font-weight: 900; margin-top: 50px;
+    }
+    
+    .form-cadastrar-produto{
+        margin: auto;
+    }
+    
+    .form-cadastrar-produto > input{
+        width: 350px; height: 40px; border: none; border-radius: 5px; margin-bottom: 15px; font-size: 1.4rem;
+    }
+    
+    .form-cadastrar-produto > label{
+        font-size: 1.4rem; font-weight: 700; width: 300px; display: inline-block;
+    }
+    
+
+}
+
+@media screen and (max-width: 600px) {
+    
+    .main-cadastrar-produto{
+        display: flex; flex-direction: column; background-color: rgba(255, 255, 255, 0.555); margin-left: 20%; margin-right: 20%; min-height: 89.5vh;
+    }
+    
+    .title-cadastrar-produto{
+        font-size:2.8rem; text-align: center; color: rgba(0, 0, 0, 0.678); font-weight: 900; margin-top: 50px;
+    }
+    
+    .form-cadastrar-produto{
+        margin: auto;
+    }
+    
+    .form-cadastrar-produto > input{
+        width: 250px; height: 40px; border: none; border-radius: 5px; margin-bottom: 15px; font-size: 1.4rem;
+    }
+    
+    .form-cadastrar-produto > label{
+        font-size: 1.4rem; font-weight: 700; width: 300px; display: inline-block;
+    }
+    
+    .opcao-navbar{
+        color:black; font-size: 1.1rem; font-weight: 700; text-decoration: none; margin-left: 8px; display:flex; align-items: center; background-color:#ccc892; border-radius: 20%; min-width: 7%; justify-content: center; margin-top: 15px; margin-bottom: 15px; 
+    }
 }

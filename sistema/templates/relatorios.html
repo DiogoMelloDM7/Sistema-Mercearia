@@ -34,24 +34,24 @@ Relatórios
     <div class='resultado-relatorios'>
         {% for relatorio in lista_relatorios_caixa %}
         <div class="relatorio-capa">
-            <a href="#" class="item-capa-relatorio">
+            <a href="{% url 'sistema:relatoriocaixa' relatorio.3 %}" class="item-capa-relatorio">
             <span class='item-capa-relatorio'>Data <br>{{ relatorio.0 }}</span><br>
             <div style='background-color: black; height:2px; margin-top:20px; margin-bottom:20px;'>
             </div>
-            <span class='item-capa-relatorio'>Valor Sistema<br> R$ {{ relatorio.1 }}</span><br>
+            <span class='item-capa-relatorio'>Valor Sistema<br> R$ {{ relatorio.1|floatformat:"2" }}</span><br>
             <div style='background-color: black; height:2px; margin-top:20px; margin-bottom:20px;'>
             </div>
-            <span class='item-capa-relatorio'>Valor Caixa<br> R$ {{ relatorio.2 }}</span>
+            <span class='item-capa-relatorio'>Valor Caixa<br> R$ {{ relatorio.2|floatformat:"2" }}</span>
             </a>
         </div>
         {% endfor %}
         {% for relatorio in lista_relatorios_venda %}
         <div class="relatorio-capa">
-            <a href="#" class="item-capa-relatorio">
+            <a href="{% url 'sistema:relatorio_vendas' relatorio.2 %}" class="item-capa-relatorio">
             <span class='item-capa-relatorio'>Data <br> <br>{{ relatorio.0 }}</span><br>
             <div style='background-color: black; height:2px; margin-top:20px; margin-bottom:20px;'>
             </div>
-            <span class='item-capa-relatorio'>Valor <br> <br> R$ {{ relatorio.1 }}</span>
+            <span class='item-capa-relatorio'>Valor <br> <br> R$ {{ relatorio.1|floatformat:"2" }}</span>
             </a>
         </div>
         {% endfor %}

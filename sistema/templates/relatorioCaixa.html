@@ -8,6 +8,14 @@ Relatório de Caixa
 
 {% block content %}
 
+{% if messages %}
+    {% for message in messages %}
+        <div id="error-message" class="{% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% endif %}" style="display: none;">             
+                    <span>{{ message }}<span>
+        </div>
+    {% endfor %}
+{% endif %}
+
 <div>
     <div style="height: 50px;">
     </div>
@@ -17,29 +25,29 @@ Relatório de Caixa
         </tr>
         {% for credit in object.credito.all %}
         <tr>
-            <th>{{ credit }} <th>{{ credit.valor }}<th>
+            <th>{{ credit }} <th>{{ credit.valor|floatformat:"2" }}<th>
         </tr>
         {% endfor %}
         {% for debit in object.debito.all %}
         <tr>
-            <th>{{ debit }} <th><th>{{ debit.valor }}
+            <th>{{ debit }} <th><th>{{ debit.valor|floatformat:"2" }}
         </tr>
         {% endfor %}
         <tr>
-            <th>Valor total de vendas<th>Valor de Vendas<th>
+            <th>Valor total de vendas<th>{{ valor_total_vendas|floatformat:"2" }}<th>
         </tr>
         <tr>
-            <th colspan="2">Valor total<th> R$ VALOR TOTAL
+            <th>Valor total<th colspan="2"> R$ {{ valor_total|floatformat:"2" }}
         </tr>
     </table>
     <div style='background-color: black; height:2px; margin-top:50px; margin-bottom:50px;'>
     </div>
     <table>
         <tr>
-            <th>VALOR NO SISTEMA<th>VALOR EM CAIXA<th>SALDO FINAL
+            <th>VALOR NO SISTEMA<th>VALOR EM CAIXA<th>VALOR EM CARTÕES<th>SALDO FINAL
         </tr>
         <tr>
-            <th style="width: 250px;">{{ object.valorSistema }}<th style="width: 250px;">{{ object.valorCaixa }}<th style="width: 250px;">{{ object.saldoFinal }}
+            <th style="width: 250px;">R$ {{ object.valorSistema|floatformat:"2" }}<th style="width: 250px;">R$ {{ object.valorCaixa|floatformat:"2" }}<th style="width: 250px;">R$ {{ object.valorCartao|floatformat:"2" }}<th style="width: 250px;">R$ {{ object.saldoFinal|floatformat:"2" }}
         </tr>
     </table>
 <div class="div-botao-voltar">

@@ -8,6 +8,8 @@ Relatório de Vendas
 
 {% block content %}
 
+
+
 <div>
     <div style="height: 50px;">
     </div>
@@ -17,11 +19,11 @@ Relatório de Vendas
         </tr>
         {% for venda in object.vendas.all %}
         <tr>
-            <th>{{ venda }} <th>{{ venda.valor }}
+            <th>{{ venda }} <th>R$ {{ venda.valor|floatformat:"2" }}
         </tr>
         {% endfor %}
         <tr>
-            <th>VALOR TOTAL <th> R$ Valor
+            <th>VALOR TOTAL <th>R$ {{ object.valorfinal|floatformat:"2" }}
         </tr>
     </table>
     <div class="div-botao-voltar">

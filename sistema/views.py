@@ -3,7 +3,7 @@ from django.views.generic import DetailView, ListView
 from .models import RelatorioVendas, RelatorioCaixa, Produto, Credito, Debito, Venda, ItensVenda, Cartao
 from django.contrib import messages
 from django.urls import reverse
-from django.db.models import Q
+from django.db.models import Q, Sum
 from datetime import date, datetime
 from decimal import Decimal, ROUND_DOWN
 
@@ -156,12 +156,12 @@ def relatorios(request):
         if tipo_relatorio == "relatorio-caixa":
             # Consulta para relatório de caixa entre datas
             relatorios_caixa = RelatorioCaixa.objects.filter(data__date__range=(data_inicial, data_final))
-            lista_relatorios_caixa = [(relatorio.data.date(), relatorio.valorSistema, relatorio.valorCaixa) for relatorio in relatorios_caixa]
+            lista_relatorios_caixa = [(relatorio.data.date(), relatorio.valorSistema, relatorio.valorCaixa, relatorio.pk) for relatorio in relatorios_caixa]
 
         elif tipo_relatorio == "relatorio-vendas":
             # Consulta para relatório de vendas entre datas
             relatorios_vendas = RelatorioVendas.objects.filter(data__date__range=(data_inicial, data_final))
-            lista_relatorios_venda = [(relatorio.data.date(), relatorio.valorfinal) for relatorio in relatorios_vendas]
+            lista_relatorios_venda = [(relatorio.data.date(), relatorio.valorfinal, relatorio.pk) for relatorio in relatorios_vendas]
 
     return render(request, "relatorios.html", {"lista_relatorios_venda": lista_relatorios_venda, "lista_relatorios_caixa": lista_relatorios_caixa})
 
@@ -261,7 +261,7 @@ def caixa(request):
                     valor = valor.replace(",",".")
                     valor = Decimal(valor)
                     relatorio.valorSistema -= valor
-                    relatorio.saldoFinal = relatorio.valorCaixa - relatorio.valorSistema
+                    relatorio.saldoFinal = (relatorio.valorCaixa + relatorio.valorCartao) - relatorio.valorSistema
                     relatorio.save()
                     Debito.objects.create(descricao=descricao, valor=valor, relatorio_caixa=relatorio)
             except:
@@ -284,7 +284,7 @@ def caixa(request):
                     valor = valor.replace(",",".")
                     valor = Decimal(valor)
                     relatorio.valorSistema += valor
-                    relatorio.saldoFinal = relatorio.valorCaixa - relatorio.valorSistema
+                    relatorio.saldoFinal = (relatorio.valorCaixa + relatorio.valorCartao) - relatorio.valorSistema
                     relatorio.save()
                     Credito.objects.create(descricao=descricao, valor=valor, relatorio_caixa=relatorio)
             except:
@@ -304,6 +304,27 @@ class RelatorioDeVendas(DetailView):
 class RelatorioDeCaixa(DetailView):
     template_name = "relatorioCaixa.html"
     model = RelatorioCaixa
+
+    def get_context_data(self, **kwargs):
+       try:
+            context = super().get_context_data(**kwargs)
+            relatorio = self.get_object()
+            date = relatorio.data.date()
+            relatorio_venda = get_object_or_404(RelatorioVendas, data__date=date)
+            valor_total_vendas = relatorio_venda.valorfinal
+            context['valor_total_vendas'] = valor_total_vendas
+           
+            valorcredito = relatorio.credito.aggregate(Sum('valor'))['valor__sum'] or 0
+            valordebito = relatorio.debito.aggregate(Sum('valor'))['valor__sum'] or 0
+
+            valor_total = (valor_total_vendas + valorcredito) - valordebito
+            context['valor_total'] = valor_total
+
+            return context
+       except:
+           messages.error(self.request, "Ocorreu um erro ao carregar o relatório, parece que algumas informações foram corrompidas!")
+           return
+            
 
 
 class EditarProduto(DetailView):
