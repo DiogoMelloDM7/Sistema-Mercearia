@@ -1,0 +1,411 @@
+*{
+    margin:0; padding: 0; font-family: Arial, Helvetica, sans-serif;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px #e6e4c4; 
+    border-radius: 10px;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #afaf6f; 
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #999782a2; 
+  }
+
+.secao-de-opcoes{
+    background-color:#f2f1dd; height:100px; display:flex; justify-content: space-around;
+}
+
+.opcao-navbar{
+    color:black; font-size: 1.4rem; font-weight: 700; text-decoration: none; margin-left: 15px; display:flex; align-items: center; background-color:#ccc892; border-radius: 20%; min-width: 7%; justify-content: center; margin-top: 15px; margin-bottom: 15px; padding: 5px 20px;
+}
+
+.opcao-navbar:hover{
+    background-color: #cac35e;  transition: .4s; color:white;
+}
+
+body{
+    background-color:#e6e4c4;
+}
+
+.icone-img{
+    display: flex;
+    flex-direction: column;
+    width: 100px;
+    margin-left: auto; margin-right: 30px;
+    justify-content: flex-end;
+    
+    
+}
+
+.img-sm{
+    width: 100px; height: 100px; margin-top: 50px; background-size: cover;
+}
+
+.img-sm:hover{
+    background-color: #f2f1dd; border-radius: 20%; transition: transform .5s; 
+    cursor: pointer;
+    transform: scale(1.2)rotate(1deg);
+    border: 2px solid #d9d6ab;
+    transform: translate(-3px, -3px);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.699);
+    padding: 10px;
+    
+}
+
+.inserir-item-venda{
+    margin-left: 5%; margin-right: 5%; margin-top: 75px; 
+}
+
+.input-produto{
+    width:350px; height:40px; border-radius: 5px; border: none; margin: 10px;font-size:1.5rem;
+}
+
+.label-vendas{
+    font-size: 1.5rem; font-weight: 600;
+}
+
+.input{
+    width: 200px; height: 40px; border:none; border-radius: 5px; margin:10px; font-size:1.5rem;
+}
+
+.btn-add{
+    width:100px; height: 40px; background-color: rgb(0, 172, 0);color:white; border: none; border-radius: 10px; margin-left: 20px;
+}
+
+.btn-add:hover{
+    background-color: rgb(0, 100, 0); transition: .5s; cursor: pointer; 
+}
+
+.lista-item-venda{
+    margin-left: 5%; margin-right: 5%; margin-top: 75px; 
+}
+
+.span-produto{
+    background-color: white;border-radius: 5px; margin:10px; padding:10px 100px; font-size: 1.4rem; font-weight: 700; margin:10px 20px;
+}
+
+.span{
+    background-color: white; padding:10px 50px; border-radius:5px;
+    font-size: 1.4rem; font-weight: 700; margin:10px 20px;
+}
+
+.btn-del{
+    width:100px; height: 40px; background-color: rgb(231, 0, 0);color:white; border: none; border-radius: 10px; margin-left: 20px; margin-top: 25px;margin-bottom: 25px;
+}
+
+.btn-del:hover{
+    background-color: rgb(134, 9, 0); transition: .5s; cursor: pointer; 
+}
+
+.btn-prosseguir-vendas{
+    text-align: center; background-color: green; color: white;
+    width: 300px; height: 70px; border: none; border-radius: 10px;
+     font-size: 1.3rem; font-weight: bold; cursor: pointer;
+    
+}
+
+.link-btn{
+    text-decoration: none; margin-top: 20px;
+}
+
+.btn-prosseguir-vendas:hover{
+    background-color: rgb(1, 201, 1); transition: .5s;
+}
+
+.div-link-btn{
+    display: flex; justify-content: center;
+}
+
+.label-relatorios{
+    font-size: 1.5rem; font-weight: 700; margin-left:50px; margin-right:10px;
+}
+
+.input-data{
+    width: 180px; height: 40px; border: none; border-radius: 5px; font-size: 1.4rem; margin-right: 50px;
+}
+
+.input-data2{
+    width: 250px; height: 40px; border: none; border-radius: 5px; font-size: 1.4rem; margin-right: 50px; margin-top: 20px;
+}
+
+.busca-data{
+    margin-left: 5%; margin-right: 5%; margin-top: 50px; text-align: center;
+}
+
+.busca-data > h1{
+    margin-bottom: 25px;
+}
+
+.resultado-relatorios{
+    display: flex; justify-content: space-around; flex-wrap: wrap;
+}
+
+.relatorio-capa{
+    background-color: rgba(255, 255, 255, 0.747); width: 180px; min-height: 250px; border-radius: 10px; display: flex; flex-direction: column; margin: 20px 50px;
+}
+
+.item-capa-relatorio{
+    font-size: 1.2rem; font-weight: 600; padding: 35% 10px; text-align: center; margin-top: 15px; text-decoration: none; color: black;  cursor: pointer;
+}
+
+.relatorio-capa:hover{
+    background-color: rgba(255, 255, 255, 0.411); transition: .5s;
+    cursor: pointer;
+}
+
+.busca-add-produto{
+    display: flex; justify-content: space-evenly; align-items: center; margin-top: 25px; margin-bottom: 25px;
+}
+
+.add-produto{
+    background-color: rgb(0, 123, 172); color:white; border: none; border-radius: 10px; width: 200px; height: 40px; cursor: pointer; 
+}
+
+.add-produto:hover{
+    background-color: rgb(1, 44, 61); transition: .5s;
+}
+
+.input-produto{
+    width: 350px; height: 40px; border: none; border-radius: 5px;
+}
+
+table{
+    height:20px;
+    border-collapse: collapse; /* Essa propriedade faz com que a tabela fique próxima, ajustando como deve ficar */
+    background-color: rgba(209, 209, 209, 0.438);
+    margin:auto;
+}
+td, th {
+    border: 1px solid black;
+    padding: 12px;
+}
+
+.produto-tabela{
+    width: 250px;
+}
+
+.tabela-soma-caixa{
+    display: flex; justify-content: center; 
+}
+
+.resultado-soma-caixa{
+    display: flex; justify-content: space-around
+}
+
+.btn-calc{
+    width:200px; height: 40px; background-color: rgb(0, 172, 0);color:white; border: none; border-radius: 10px; margin-left: 20px; margin-top: 30px; margin-bottom: 30px;
+}
+
+.btn-calc:hover{
+    background-color: rgb(0, 100, 0); transition: .5s; cursor: pointer; 
+}
+.btn-save{
+    width:20%;height: 40px; background-color: rgb(0, 172, 0);color:white; border: none; border-radius: 10px; margin-left: 20px; margin-top: 30px; margin-bottom: 30px;
+}
+
+.btn-save:hover{
+    background-color: rgb(0, 100, 0); transition: .5s; cursor: pointer; 
+}
+
+.btn-back{
+    width:20%;height: 40px; background-color: rgb(62, 128, 250);color:white; border: none; border-radius: 10px; margin-left: 20px; margin-top: 30px; margin-bottom: 30px;
+}
+
+.btn-back:hover{
+    background-color: rgb(1, 32, 88); transition: .5s; cursor: pointer; 
+}
+
+.form-saida{
+    display: flex; justify-content: center; margin-top: 150px;
+}
+
+.saida-caixa{
+    display: flex; justify-content: center; flex-wrap: wrap;
+}
+
+.btn-back > a {
+    text-decoration: none; color:white;
+}
+
+.ocultar{
+    display: none;
+}
+
+.div-botao-voltar{
+    display: flex; justify-content: center; margin-top: 100px;
+}
+
+.btn-voltar{
+    background-color: rgb(73, 73, 73); width: 250px; height: 50px; border-radius: 10px; border: none;  cursor: pointer;color:white; text-decoration: none; text-align: center; font-size: 1.3rem;
+}
+
+.btn-voltar:hover{
+    transition: .5s;background-color: rgb(173, 172, 172);
+}
+
+.main-cadastrar-produto{
+    display: flex; flex-direction: column; background-color: rgba(255, 255, 255, 0.555); margin-left: 20%; margin-right: 20%; min-height: 89.5vh;
+}
+
+.title-cadastrar-produto{
+    font-size:2.8rem; text-align: center; color: rgba(0, 0, 0, 0.678); font-weight: 900; margin-top: 50px;
+}
+
+.form-cadastrar-produto{
+    margin: auto;
+}
+
+.form-cadastrar-produto > input{
+    width: 500px; height: 40px; border: none; border-radius: 5px; margin-bottom: 15px; font-size: 1.4rem;
+}
+
+.form-cadastrar-produto > label{
+    font-size: 1.4rem; font-weight: 700; width: 300px; display: inline-block;
+}
+
+.btn-save-produto{
+    width: 250px; height: 40px; border: none; border-radius: 5px; background-color: rgb(0, 172, 0); color: white; font-weight: 700; font-size: 1.4rem; margin-top: 30px; margin-right: 100px;
+}
+
+.btn-save-produto:hover{
+    background-color: rgb(0, 100, 0); transition: .5s; cursor: pointer; 
+}
+
+.btn-del-produto{
+    width: 250px; height: 40px; border: none; border-radius: 5px; background-color: rgb(231, 0, 0); color: white; font-weight: 700; font-size: 1.4rem; margin-top: 30px;
+}
+
+.btn-del-produto:hover{
+    background-color:  rgb(134, 9, 0); transition: .5s; cursor: pointer; 
+}
+
+.subtitle-editar-produto{
+    font-size:2rem; text-align: center; color: rgba(0, 0, 0, 0.678); font-weight: 900; margin-top: 50px;
+}
+
+.alert-danger{
+    background-color: rgb(255, 100, 100); min-width: 350px; min-height: 50px; color: white; font-size: 1.3rem; font-weight: 600; padding: 10px; border-radius: 10px;
+}
+
+.alert-success{
+    background-color: rgb(78, 255, 116); min-width: 350px; min-height: 50px; color: white; font-size: 1.3rem; font-weight: 600; padding: 10px; border-radius: 10px;
+}
+
+.pagamento{
+    background-color: rgba(255, 255, 255, 0.76); display: flex; flex-direction: column; align-items: center;
+    padding-top: 50px;padding-bottom:50px; max-width: 800px; min-height: 800px; margin: auto; margin-top: 100px; border-radius: 10px;
+}
+
+.pagamento > h1 {
+    margin-bottom: 100px;
+}
+
+.pagamento-input > input{
+    width: 50px; height: 50px; margin-left: 30px;
+}
+
+.pagamento-input > label{
+    font-size: 2rem;
+}
+
+.pagamento-input{
+    background-color: white; margin-bottom: 50px; height: 100px; width: 400px; align-items: center; display: flex;
+    padding: 10px; border-radius: 15px; cursor: pointer;
+}
+.pagamento-input:hover{
+    background-color: rgba(197, 197, 197, 0.685); transition: 0.5s;
+}
+
+.sales-confirm{
+    background-color: rgb(0, 172, 0); color: white; width: 350px; height: 50px; border-radius: 15px; border: none; 
+    font-size: 1.3rem; font-weight: 700;
+}
+
+.sales-confirm:hover{
+    background-color: rgb(0, 100, 0); transition: .5s; cursor: pointer;
+}
+
+.aviso-caixa{
+    background-color: rgba(255, 255, 255, 0.651); font-weight: 400; font-size: 1.2em; text-align: center; padding: 5px; border-radius: 5px; width: 350px; margin: auto; margin-top: 15px;
+}
+
+.pagamento-input-2{
+    background-color: white; margin-bottom: 50px; height: 300px; width: 400px; align-items: center; display: block;
+    padding: 10px; border-radius: 15px; cursor: pointer;
+}
+.pagamento-input-2:hover{
+    background-color: rgba(197, 197, 197, 0.685); transition: 0.5s;
+}
+
+.pagamento-input-2 > input{
+    width: 370px; height: 60px; font-size: 1.7rem; margin: 5px;
+}
+.pagamento-input-2 > label{
+     font-size: 2rem; margin-bottom: 10px;
+}
+
+
+@media screen and (max-width: 1400px) {
+    
+    .main-cadastrar-produto{
+        display: flex; flex-direction: column; background-color: rgba(255, 255, 255, 0.555); margin-left: 20%; margin-right: 20%; min-height: 89.5vh;
+    }
+    
+    .title-cadastrar-produto{
+        font-size:2.8rem; text-align: center; color: rgba(0, 0, 0, 0.678); font-weight: 900; margin-top: 50px;
+    }
+    
+    .form-cadastrar-produto{
+        margin: auto;
+    }
+    
+    .form-cadastrar-produto > input{
+        width: 350px; height: 40px; border: none; border-radius: 5px; margin-bottom: 15px; font-size: 1.4rem;
+    }
+    
+    .form-cadastrar-produto > label{
+        font-size: 1.4rem; font-weight: 700; width: 300px; display: inline-block;
+    }
+    
+
+}
+
+@media screen and (max-width: 600px) {
+    
+    .main-cadastrar-produto{
+        display: flex; flex-direction: column; background-color: rgba(255, 255, 255, 0.555); margin-left: 20%; margin-right: 20%; min-height: 89.5vh;
+    }
+    
+    .title-cadastrar-produto{
+        font-size:2.8rem; text-align: center; color: rgba(0, 0, 0, 0.678); font-weight: 900; margin-top: 50px;
+    }
+    
+    .form-cadastrar-produto{
+        margin: auto;
+    }
+    
+    .form-cadastrar-produto > input{
+        width: 250px; height: 40px; border: none; border-radius: 5px; margin-bottom: 15px; font-size: 1.4rem;
+    }
+    
+    .form-cadastrar-produto > label{
+        font-size: 1.4rem; font-weight: 700; width: 300px; display: inline-block;
+    }
+    
+    .opcao-navbar{
+        color:black; font-size: 1.1rem; font-weight: 700; text-decoration: none; margin-left: 8px; display:flex; align-items: center; background-color:#ccc892; border-radius: 20%; min-width: 7%; justify-content: center; margin-top: 15px; margin-bottom: 15px; 
+    }
+}
