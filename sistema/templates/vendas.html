@@ -128,7 +128,7 @@ Vendas
                 });
             </script>
             <div class="pagamento-input">
-            <label for="idcartao">CARTÃO</label>
+            <label for="idcartao">CARTÃO/PIX</label>
             <input type="radio" value="cartao" name="pagamento" id="idcartao">
             </div>
             <div class="pagamento-input">
@@ -136,13 +136,16 @@ Vendas
             <input type="radio" value="dinheiro" name="pagamento" id="iddinheiro"><br>
             </div>
             <div class="pagamento-input-2">
-                <label for="idcartao-dinheiro">CARTÃO + DINHEIRO</label>
+                <label for="idcartao-dinheiro">CARTÃO/PIX + DINHEIRO</label>
                 <input type="radio" value="dinheiro+cartao" name="pagamento" id="idcartao+dinheiro"><br>
                 <input type="text" placeholder="Insira o valor pago no dinheiro" name="valor-dinheiro"><br>
                 <input type="text" placeholder="Insira o valor pago no cartão" name="valor-cartao">
             </div>
             
             <button type="submit" class="sales-confirm" name="confirm" value="confirm-sale">CONFIRMAR VENDA</button>
+            <p class="total-value-sale">Valor total: R$ {{ valor_total_venda|floatformat:"2" }} </p>
+
+
         </form>
     </div>
     

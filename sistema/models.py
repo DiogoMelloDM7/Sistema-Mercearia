@@ -58,7 +58,7 @@ class Credito(models.Model):
     valor = models.DecimalField(max_digits=10, decimal_places=2) 
 
     def __str__(self): 
-        return self.descricao + " - Relatório  " + f"{self.relatorio_caixa.pk}"
+        return self.descricao
 
 
 class Debito(models.Model):
@@ -67,7 +67,7 @@ class Debito(models.Model):
     valor = models.DecimalField(max_digits=10, decimal_places=2) 
 
     def __str__(self): 
-        return self.descricao + " - Relatório " + f"{self.relatorio_caixa.pk}"
+        return self.descricao
 
 
 class Cartao(models.Model):

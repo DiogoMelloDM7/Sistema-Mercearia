@@ -4,7 +4,7 @@ from .models import RelatorioVendas, RelatorioCaixa, Produto, Credito, Debito, V
 from django.contrib import messages
 from django.urls import reverse
 from django.db.models import Q, Sum
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from decimal import Decimal, ROUND_DOWN
 
 
@@ -21,6 +21,10 @@ class Vendas(ListView):
     template_name = "vendas.html"
     model = Produto
 
+    def get(self, request, *args, **kwargs):
+        limpa_lista_vendas()
+        return super().get(request, *args, **kwargs)
+
     def post(self, request, *args, **kwargs):
         button_type = request.POST.get("confirm")
         
@@ -33,11 +37,12 @@ class Vendas(ListView):
                 produtos = Produto.objects.all()
             return render(request, self.template_name, {"object_list":produtos, "itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
         if button_type == "add":
-            id_produto = request.POST.get("produto")
-            quantidade = request.POST.get("quantidade")
-            valor = request.POST.get("valor")
-            produto = Produto.objects.filter(pk=id_produto).first()
             try:
+                id_produto = request.POST.get("produto")
+                quantidade = request.POST.get("quantidade")
+                valor = request.POST.get("valor")
+                produto = Produto.objects.filter(pk=id_produto).first()
+                
                 if valor:
                     quantidade = int(quantidade)
                     valor = valor.replace(",",".")
@@ -71,28 +76,62 @@ class Vendas(ListView):
                 return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
             except: 
                 return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
+
+        cartao_pix_dinheiro = False
         if button_type == "confirm-sale":
+
+            for item in lista_vendas:
+                    nome_produto = item[0]
+                    quantidade = item[1]
+                    valor_total_venda += item[3]
+                    produto = Produto.objects.filter(nome=nome_produto).first()
+                    verifica_produto = (produto.quantidade - quantidade)
+                    if verifica_produto < 0:
+                        messages.error(request, f"O item {nome_produto} não possui estoque suficiente para completar essa venda!")
+                        return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
+
+            forma_pagamento = request.POST.get("pagamento")
+            if forma_pagamento == "dinheiro+cartao":
+                for item in lista_vendas:
+                    valor_total_venda += item[3]
+                try:
+                    valor_dinheiro = request.POST.get('valor-dinheiro')
+                    valor_cartao = request.POST.get('valor-cartao')
+                    valor_dinheiro = valor_dinheiro.replace(",",".")
+                    valor_cartao = valor_cartao.replace(",",".")
+                    valor_cartao = Decimal(valor_cartao)
+                    valor_dinheiro = Decimal(valor_dinheiro)
+                    valor_total_venda = Decimal(valor_total_venda)
+                    decimal_context = Decimal('0.01')
+                    # Quantize os valores com duas casas decimais
+                    valor_total_venda = valor_total_venda.quantize(decimal_context, rounding=ROUND_DOWN)
+                    valor_cartao = valor_cartao.quantize(decimal_context, rounding=ROUND_DOWN)
+                    valor_dinheiro = valor_dinheiro.quantize(decimal_context, rounding=ROUND_DOWN)
+                    if (valor_cartao + valor_dinheiro) != valor_total_venda:
+                        messages.error(request, "Valor inserido não bate com o valor da compra, verifique os dados e tente novamente!")
+                        return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
+                    cartao_pix_dinheiro = True
+                    
+                except:
+                    messages.error(request, "Verifique os dados inseridos e tente novamente, use apenas numeros e ponto ou virgula! Exemplo 15,99 ou 7.99!")
+
             if lista_vendas:
+                valor_total_venda = 0
                 data_hoje = date.today()
                 relatorio_venda = RelatorioVendas.objects.filter(data__date=data_hoje).first()
                 if not relatorio_venda:
                     relatorio_venda = RelatorioVendas.objects.create(valorfinal = 0)
                 venda = Venda.objects.create(relatorio = relatorio_venda, valor = 0)
-                
                 for item in lista_vendas:
                     nome_produto = item[0]
                     quantidade = item[1]
                     valor_total_venda += item[3]
                     produto = Produto.objects.filter(nome=nome_produto).first()
                     produto.quantidade -= quantidade
-                    if produto.quantidade < 0:
-                        messages.error(request, f"O item {nome_produto} não possui estoque suficiente para completar essa venda!")
-                        return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
                     produto.save()
                     ItensVenda.objects.create(venda=venda, produto = produto, quantidade = quantidade)
                 venda.valor = Decimal(valor_total_venda)
                 venda.save()
-                forma_pagamento = request.POST.get("pagamento")
                 data_hoje = date.today()
                 relatorio = RelatorioCaixa.objects.filter(data__date=data_hoje).first()
                 if not relatorio:
@@ -104,32 +143,15 @@ class Vendas(ListView):
                     relatorio.valorCartao += Decimal(valor_total_venda)
                     relatorio.save()
                     Cartao.objects.create(valor=Decimal(valor_total_venda), venda=venda)
-                limpa_lista_vendas()
-                if forma_pagamento == "dinheiro+cartao":
-                    try:
-                        valor_dinheiro = request.POST.get('valor-dinheiro')
-                        valor_cartao = request.POST.get('valor-cartao')
-                        valor_dinheiro = valor_dinheiro.replace(",",".")
-                        valor_cartao = valor_cartao.replace(",",".")
-                        valor_cartao = Decimal(valor_cartao)
-                        valor_dinheiro = Decimal(valor_dinheiro)
-                        valor_total_venda = Decimal(valor_total_venda)
-                        decimal_context = Decimal('0.01')
-                        # Quantize os valores com duas casas decimais
-                        valor_total_venda = valor_total_venda.quantize(decimal_context, rounding=ROUND_DOWN)
-                        valor_cartao = valor_cartao.quantize(decimal_context, rounding=ROUND_DOWN)
-                        valor_dinheiro = valor_dinheiro.quantize(decimal_context, rounding=ROUND_DOWN)
-                        if (valor_cartao + valor_dinheiro) != valor_total_venda:
-                            messages.error(request, "Valor inserido não bate com o valor da compra, verifique os dados e tente novamente!")
-                            return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
-                        relatorio.valorCartao += valor_cartao
-                        relatorio.save()
-                        Cartao.objects.create(valor=Decimal(valor_cartao), venda=venda)
-                        relatorio_venda.valorfinal += Decimal(valor_cartao)
-                    except:
-                        messages.error(request, "Verifique os dados inseridos e tente novamente, use apenas numeros e ponto ou virgula! Exemplo 15,99 ou 7.99!")
+                if cartao_pix_dinheiro:
+                    relatorio.valorCartao += valor_cartao
+                    relatorio.save()
+                    Cartao.objects.create(valor=Decimal(valor_cartao), venda=venda)
+                
+                
                 relatorio_venda.valorfinal += Decimal(valor_total_venda)
                 relatorio_venda.save()
+                limpa_lista_vendas()
                 return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
             else:
                 messages.error(request, "Para finalizar uma venda, você precisa inserir algum item!")
@@ -235,10 +257,19 @@ def caixa(request):
             real100 = real100 * 100
             total = cent5 + cent10 + cent25 + cent50 + real1 + real2 + real5 + real10 + real20 + real50 + real100
             total = Decimal(total)
+
             data_hoje = date.today()
+            data_ontem = data_hoje - timedelta(days=1)
+            relatorio_ontem = RelatorioCaixa.objects.filter(data__date=data_ontem).first()
+            if relatorio_ontem:
+                valor_sistema_ontem = relatorio_ontem.valorSistema
+                valor_cartao_ontem = relatorio_ontem.valorCartao
+            else:
+                valor_sistema_ontem = Decimal(0)
+                valor_cartao_ontem = Decimal(0)
             relatorio = RelatorioCaixa.objects.filter(data__date=data_hoje).first()
             if not relatorio:
-                RelatorioCaixa.objects.create(valorCaixa=total, valorSistema=0, saldoFinal=0)
+                RelatorioCaixa.objects.create(valorCaixa=total, valorSistema=valor_sistema_ontem, saldoFinal=0, valorCartao=valor_cartao_ontem)
             else:
                 relatorio.valorCaixa = total
                 relatorio.saldoFinal = (relatorio.valorCaixa + relatorio.valorCartao) - relatorio.valorSistema
@@ -277,7 +308,7 @@ def caixa(request):
                 if not relatorio:
                     valor = valor.replace(",",".")
                     valor = Decimal(valor)
-                    relatorio = RelatorioCaixa.objects.create(valorSistema=(valor), saldoFinal=0, saldoCaixa=0)
+                    relatorio = RelatorioCaixa.objects.create(valorSistema=(+valor), saldoFinal=0, saldoCaixa=0)
                     Credito.objects.create(descricao=descricao, valor=valor, relatorio_caixa=relatorio)
                     
                 else:
@@ -319,6 +350,7 @@ class RelatorioDeCaixa(DetailView):
 
             valor_total = (valor_total_vendas + valorcredito) - valordebito
             context['valor_total'] = valor_total
+            context['data'] = date
 
             return context
        except:

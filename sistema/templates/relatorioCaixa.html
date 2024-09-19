@@ -19,6 +19,7 @@ Relatório de Caixa
 <div>
     <div style="height: 50px;">
     </div>
+    <h1 class="title-report-store-cashier">Relatório referente ao dia {{ data }}</h1>
     <table>
         <tr>
             <th style="width: 300px;">DESCRIÇÃO <th style="width: 150px;">CRÉDITO<th style="width: 150px;">DÉBITO
@@ -44,7 +45,7 @@ Relatório de Caixa
     </div>
     <table>
         <tr>
-            <th>VALOR NO SISTEMA<th>VALOR EM CAIXA<th>VALOR EM CARTÕES<th>SALDO FINAL
+            <th>VALOR NO SISTEMA<th>VALOR EM CAIXA<th>VALOR EM CARTÕES/PIX<th>SALDO FINAL
         </tr>
         <tr>
             <th style="width: 250px;">R$ {{ object.valorSistema|floatformat:"2" }}<th style="width: 250px;">R$ {{ object.valorCaixa|floatformat:"2" }}<th style="width: 250px;">R$ {{ object.valorCartao|floatformat:"2" }}<th style="width: 250px;">R$ {{ object.saldoFinal|floatformat:"2" }}
