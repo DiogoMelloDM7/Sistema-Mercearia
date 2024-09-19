@@ -83,7 +83,6 @@ class Vendas(ListView):
             for item in lista_vendas:
                     nome_produto = item[0]
                     quantidade = item[1]
-                    valor_total_venda += item[3]
                     produto = Produto.objects.filter(nome=nome_produto).first()
                     verifica_produto = (produto.quantidade - quantidade)
                     if verifica_produto < 0:
