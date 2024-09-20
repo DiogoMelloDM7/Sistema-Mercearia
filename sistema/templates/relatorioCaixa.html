@@ -34,12 +34,17 @@ Relatório de Caixa
             <th>{{ debit }} <th><th>{{ debit.valor|floatformat:"2" }}
         </tr>
         {% endfor %}
+        
         <tr>
             <th>Valor total de vendas<th>{{ valor_total_vendas|floatformat:"2" }}<th>
         </tr>
+        
+        
         <tr>
             <th>Valor total<th colspan="2"> R$ {{ valor_total|floatformat:"2" }}
         </tr>
+        
+
     </table>
     <div style='background-color: black; height:2px; margin-top:50px; margin-bottom:50px;'>
     </div>

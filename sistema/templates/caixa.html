@@ -21,112 +21,70 @@ Relatório de Caixa
     <div class='tabela-soma-caixa'>
         <form method='post'>
             {% csrf_token %}
-        <table>
-            <tr>
-                <th>Quantidade de cédulas/moedas<th>Valor<th>Valor total
-            </tr>
-            <!-- for produto in produtos -->
-            <tr>
-                <td> <input type="number" name="5-cent" required value={{ campo1 }}>
-                <td> R$ 0,05
-                <td>{% if cent5 %} 
-                    R$ {{ cent5|floatformat:"2" }}
-                    {% else %}
-                    R$ 0,00
-                    {% endif %}
-            </tr>
-            <tr>
-                <td><input type="number" name="10-cent" required>
-                <td> R$ 0,10
-                <td>{% if cent10 %} 
-                    R$ {{ cent10|floatformat:"2" }}
-                    {% else %}
-                    R$ 0,00
-                    {% endif %}
-            </tr>
-            <tr>
-                <td> <input type="number" name="25-cent" required>
-                <td> R$ 0,25
-                <td> {% if cent25 %} 
-                    R$ {{ cent25|floatformat:"2" }}
-                    {% else %}
-                    R$ 0,00
-                    {% endif %}
-            </tr>
-            <tr>
-                <td><input type="number" name="50-cent" required>
-                <td> R$ 0,50
-                <td>{% if cent50 %} 
-                    R$ {{ cent50|floatformat:"2" }}
-                    {% else %}
-                    R$ 0,00
-                    {% endif %}
-            </tr>
-            <tr>
-                <td> <input type="number" name="1-real" required>
-                <td> R$ 1,00
-                <td> {% if real1 %} 
-                    R$ {{ real1|floatformat:"2" }}
-                    {% else %}
-                    R$ 0,00
-                    {% endif %}
-            </tr>
-            <tr>
-                <td><input type="number" name="2-real" required>
-                <td> R$ 2,00
-                <td>{% if real2 %} 
-                    R$ {{ real2|floatformat:"2" }}
-                    {% else %}
-                    R$ 0,00
-                    {% endif %}
-            </tr>
-            <tr>
-                <td> <input type="number" name="5-real" required>
-                <td> R$ 5,00
-                <td> {% if real5 %} 
-                    R$ {{ real5|floatformat:"2" }}
-                    {% else %}
-                    R$ 0,00
-                    {% endif %}
-            </tr>
-            <tr>
-                <td><input type="number" name="10-real" required>
-                <td> R$ 10,00
-                <td>{% if real10 %} 
-                    R$ {{ real10|floatformat:"2" }}
-                    {% else %}
-                    R$ 0,00
-                    {% endif %}
-            </tr>
-            <tr>
-                <td> <input type="number" name="20-real" required>
-                <td> R$ 20,00
-                <td>{% if real20 %} 
-                    R$ {{ real20|floatformat:"2" }}
-                    {% else %}
-                    R$ 0,00
-                    {% endif %}
-            </tr>
-            <tr>
-                <td><input type="number" name="50-real" required>
-                <td> R$ 50,00
-                <td>{% if real50 %} 
-                    R$ {{ real50|floatformat:"2" }}
-                    {% else %}
-                    R$ 0,00
-                    {% endif %}
-            </tr>
-            <tr>
-                <td><input type="number" name="100-real" required>
-                <td> R$ 100,00
-                <td>{% if real100 %} 
-                    R$ {{ real100|floatformat:"2" }}
-                    {% else %}
-                    R$ 0,00
-                    {% endif %}
-            </tr>
-
-        </table>
+            <table>
+                <tr>
+                    <th>Quantidade de cédulas/moedas</th>
+                    <th>Valor</th>
+                    <th>Valor total</th>
+                </tr>
+                <tr>
+                    <td><input type="number" name="5-cent" required value="{{ cent5_quantity|default_if_none:0 }}"></td>
+                    <td>R$ 0,05</td>
+                    <td>R$ {{ cent5_total|floatformat:"2" }}</td>
+                </tr>
+                <tr>
+                    <td><input type="number" name="10-cent" required value="{{ cent10_quantity|default_if_none:0 }}"></td>
+                    <td>R$ 0,10</td>
+                    <td>R$ {{ cent10_total|floatformat:"2" }}</td>
+                </tr>
+                <tr>
+                    <td><input type="number" name="25-cent" required value="{{ cent25_quantity|default_if_none:0 }}"></td>
+                    <td>R$ 0,25</td>
+                    <td>R$ {{ cent25_total|floatformat:"2" }}</td>
+                </tr>
+                <tr>
+                    <td><input type="number" name="50-cent" required value="{{ cent50_quantity|default_if_none:0 }}"></td>
+                    <td>R$ 0,50</td>
+                    <td>R$ {{ cent50_total|floatformat:"2" }}</td>
+                </tr>
+                <tr>
+                    <td><input type="number" name="1-real" required value="{{ real1_quantity|default_if_none:0 }}"></td>
+                    <td>R$ 1,00</td>
+                    <td>R$ {{ real1_total|floatformat:"2" }}</td>
+                </tr>
+                <tr>
+                    <td><input type="number" name="2-real" required value="{{ real2_quantity|default_if_none:0 }}"></td>
+                    <td>R$ 2,00</td>
+                    <td>R$ {{ real2_total|floatformat:"2" }}</td>
+                </tr>
+                <tr>
+                    <td><input type="number" name="5-real" required value="{{ real5_quantity|default_if_none:0 }}"></td>
+                    <td>R$ 5,00</td>
+                    <td>R$ {{ real5_total|floatformat:"2" }}</td>
+                </tr>
+                <tr>
+                    <td><input type="number" name="10-real" required value="{{ real10_quantity|default_if_none:0 }}"></td>
+                    <td>R$ 10,00</td>
+                    <td>R$ {{ real10_total|floatformat:"2" }}</td>
+                </tr>
+                <tr>
+                    <td><input type="number" name="20-real" required value="{{ real20_quantity|default_if_none:0 }}"></td>
+                    <td>R$ 20,00</td>
+                    <td>R$ {{ real20_total|floatformat:"2" }}</td>
+                </tr>
+                <tr>
+                    <td><input type="number" name="50-real" required value="{{ real50_quantity|default_if_none:0 }}"></td>
+                    <td>R$ 50,00</td>
+                    <td>R$ {{ real50_total|floatformat:"2" }}</td>
+                </tr>
+                <tr>
+                    <td><input type="number" name="100-real" required value="{{ real100_quantity|default_if_none:0 }}"></td>
+                    <td>R$ 100,00</td>
+                    <td>R$ {{ real100_total|floatformat:"2" }}</td>
+                </tr>
+            </table>
+            
+            
         <button type="submit" value="calcula-valor" name="confirm" class='btn-calc'>Calcular </button>
         <button onclick="mostrarSaidaEntrada(event)" class='btn-back' style="width:200px;">Informar saída ou entrada </button>
     </form>

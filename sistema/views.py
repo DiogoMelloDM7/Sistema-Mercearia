@@ -228,53 +228,83 @@ def cadastrarProduto(request):
 
 
 def caixa(request):
+        
+    relatorio = RelatorioCaixa.objects.filter(data__date=date.today()).first()
+    data_hoje = date.today()
+    data_ontem = data_hoje - timedelta(days=1)
+    relatorio_ontem = RelatorioCaixa.objects.filter(data__date=data_ontem).first()
+    if relatorio_ontem:
+        valor_sistema_ontem = relatorio_ontem.valorSistema
+        valor_cartao_ontem = relatorio_ontem.valorCartao
+    else:
+        valor_sistema_ontem = Decimal(0)
+        valor_cartao_ontem = Decimal(0)
     if request.method == "POST":
         button_type = request.POST.get("confirm")
         if button_type == "calcula-valor":
-            cent5 = float(request.POST.get("5-cent", 0))  # O segundo argumento (0) é um valor padrão caso o campo esteja vazio
-            cent10 = float(request.POST.get("10-cent", 0))
-            cent25 = float(request.POST.get("25-cent", 0))
-            cent50 = float(request.POST.get("50-cent", 0))
-            real1 = float(request.POST.get("1-real", 0))
-            real2 = float(request.POST.get("2-real", 0))
-            real5 = float(request.POST.get("5-real", 0))
-            real10 = float(request.POST.get("10-real", 0))
-            real20 = float(request.POST.get("20-real", 0))
-            real50 = float(request.POST.get("50-real", 0))
-            real100 = float(request.POST.get("100-real", 0))
+            cent5_quantity = int(request.POST.get("5-cent", 0))
+            cent10_quantity = int(request.POST.get("10-cent", 0))
+            cent25_quantity = int(request.POST.get("25-cent", 0))
+            cent50_quantity = int(request.POST.get("50-cent", 0))
+            real1_quantity = int(request.POST.get("1-real", 0))
+            real2_quantity = int(request.POST.get("2-real", 0))
+            real5_quantity = int(request.POST.get("5-real", 0))
+            real10_quantity = int(request.POST.get("10-real", 0))
+            real20_quantity = int(request.POST.get("20-real", 0))
+            real50_quantity = int(request.POST.get("50-real", 0))
+            real100_quantity = int(request.POST.get("100-real", 0))
 
-            cent5 = cent5 * 0.05
-            cent10 = cent10 * 0.1
-            cent25 = cent25 * 0.25
-            cent50 = cent50 * 0.5
-            real1 = real1 * 1
-            real2 = real2 * 2
-            real5 = real5 * 5
-            real10 = real10 * 10
-            real20 = real20 * 25
-            real50 = real50 * 50
-            real100 = real100 * 100
-            total = cent5 + cent10 + cent25 + cent50 + real1 + real2 + real5 + real10 + real20 + real50 + real100
-            total = Decimal(total)
+            cent5_total = Decimal(cent5_quantity) * Decimal('0.05')
+            cent10_total = Decimal(cent10_quantity) * Decimal('0.10')
+            cent25_total = Decimal(cent25_quantity) * Decimal('0.25')
+            cent50_total = Decimal(cent50_quantity) * Decimal('0.50')
+            real1_total = Decimal(real1_quantity) * Decimal('1.00')
+            real2_total = Decimal(real2_quantity) * Decimal('2.00')
+            real5_total = Decimal(real5_quantity) * Decimal('5.00')
+            real10_total = Decimal(real10_quantity) * Decimal('10.00')
+            real20_total = Decimal(real20_quantity) * Decimal('20.00')
+            real50_total = Decimal(real50_quantity) * Decimal('50.00')
+            real100_total = Decimal(real100_quantity) * Decimal('100.00')
 
-            data_hoje = date.today()
-            data_ontem = data_hoje - timedelta(days=1)
-            relatorio_ontem = RelatorioCaixa.objects.filter(data__date=data_ontem).first()
-            if relatorio_ontem:
-                valor_sistema_ontem = relatorio_ontem.valorSistema
-                valor_cartao_ontem = relatorio_ontem.valorCartao
-            else:
-                valor_sistema_ontem = Decimal(0)
-                valor_cartao_ontem = Decimal(0)
+            total = cent5_total + cent10_total + cent25_total + cent50_total + real1_total + real2_total + real5_total + real10_total + real20_total + real50_total + real100_total
+
+
+            
             relatorio = RelatorioCaixa.objects.filter(data__date=data_hoje).first()
             if not relatorio:
-                RelatorioCaixa.objects.create(valorCaixa=total, valorSistema=valor_sistema_ontem, saldoFinal=0, valorCartao=valor_cartao_ontem)
+                relatorio = RelatorioCaixa.objects.create(valorCaixa=total, valorSistema=valor_sistema_ontem, saldoFinal=((total + valor_cartao_ontem) - valor_sistema_ontem), valorCartao=valor_cartao_ontem)
             else:
-                relatorio.valorCaixa = total
+                relatorio.valorCaixa = Decimal(total)
                 relatorio.saldoFinal = (relatorio.valorCaixa + relatorio.valorCartao) - relatorio.valorSistema
                 relatorio.save()
 
-            return render(request, "caixa.html", {"cent5": cent5, "cent10": cent10, "cent25": cent25, "cent50": cent50, "real1": real1, "real2": real2, "real5": real5, "real10": real10, "real20": real20, "real50": real50, "real100": real100, "total":total, "relatorio": relatorio})
+            context = {
+                "cent5_quantity": cent5_quantity,
+                "cent10_quantity": cent10_quantity,
+                "cent25_quantity": cent25_quantity,
+                "cent50_quantity": cent50_quantity,
+                "real1_quantity": real1_quantity,
+                "real2_quantity": real2_quantity,
+                "real5_quantity": real5_quantity,
+                "real10_quantity": real10_quantity,
+                "real20_quantity": real20_quantity,
+                "real50_quantity": real50_quantity,
+                "real100_quantity": real100_quantity,
+                "cent5_total": cent5_total,
+                "cent10_total": cent10_total,
+                "cent25_total": cent25_total,
+                "cent50_total": cent50_total,
+                "real1_total": real1_total,
+                "real2_total": real2_total,
+                "real5_total": real5_total,
+                "real10_total": real10_total,
+                "real20_total": real20_total,
+                "real50_total": real50_total,
+                "real100_total": real100_total,
+                "total": total,
+                "relatorio": relatorio
+            }
+            return render(request, "caixa.html", context)
         
         if button_type == "confirm-exit":
             descricao = request.POST.get("descricao-saida")
@@ -285,8 +315,8 @@ def caixa(request):
                 if not relatorio:
                     valor = valor.replace(",",".")
                     valor = Decimal(valor)
-                    relatorio = RelatorioCaixa.objects.create(valorSistema=(-valor), saldoFinal=0, saldoCaixa=0)
-                    Credito.objects.create(descricao=descricao, valor=valor, relatorio_caixa=relatorio)
+                    relatorio = RelatorioCaixa.objects.create(valorSistema=(valor_sistema_ontem - valor), saldoFinal=(valor_cartao_ontem - (valor_sistema_ontem - valor)),valorCartao=valor_cartao_ontem, valorCaixa=0)
+                    Debito.objects.create(descricao=descricao, valor=valor, relatorio_caixa=relatorio)
                 else:
                     valor = valor.replace(",",".")
                     valor = Decimal(valor)
@@ -307,7 +337,7 @@ def caixa(request):
                 if not relatorio:
                     valor = valor.replace(",",".")
                     valor = Decimal(valor)
-                    relatorio = RelatorioCaixa.objects.create(valorSistema=(+valor), saldoFinal=0, saldoCaixa=0)
+                    relatorio = RelatorioCaixa.objects.create(valorSistema=(valor_sistema_ontem + valor), saldoFinal=(valor_cartao_ontem - (valor_sistema_ontem + valor)),valorCartao=valor_cartao_ontem, valorCaixa=0)
                     Credito.objects.create(descricao=descricao, valor=valor, relatorio_caixa=relatorio)
                     
                 else:
@@ -329,6 +359,16 @@ class RelatorioDeVendas(DetailView):
     template_name = "relatorioVendas.html"
     model = RelatorioVendas
 
+    def get_context_data(self, **kwargs):
+    
+        context = super().get_context_data(**kwargs)
+        relatorio = self.get_object()
+        date = relatorio.data.date()
+
+        context['data'] = date
+
+        return context
+
 
 
 class RelatorioDeCaixa(DetailView):
@@ -336,26 +376,31 @@ class RelatorioDeCaixa(DetailView):
     model = RelatorioCaixa
 
     def get_context_data(self, **kwargs):
-       try:
+        try:
             context = super().get_context_data(**kwargs)
             relatorio = self.get_object()
             date = relatorio.data.date()
             relatorio_venda = get_object_or_404(RelatorioVendas, data__date=date)
             valor_total_vendas = relatorio_venda.valorfinal
-            context['valor_total_vendas'] = valor_total_vendas
-           
+            
+        except Exception as e:
+            valor_total_vendas = 0
+
+        context['valor_total_vendas'] = valor_total_vendas
+            
+        try:
             valorcredito = relatorio.credito.aggregate(Sum('valor'))['valor__sum'] or 0
             valordebito = relatorio.debito.aggregate(Sum('valor'))['valor__sum'] or 0
+        except Exception as e:
+            valorcredito = 0
+            valordebito = 0
 
-            valor_total = (valor_total_vendas + valorcredito) - valordebito
-            context['valor_total'] = valor_total
-            context['data'] = date
+        valor_total = (valor_total_vendas + valorcredito) - valordebito
+        context['valor_total'] = valor_total
+        context['data'] = date
 
-            return context
-       except:
-           messages.error(self.request, "Ocorreu um erro ao carregar o relatório, parece que algumas informações foram corrompidas!")
-           return
-            
+        return context
+        
 
 
 class EditarProduto(DetailView):
