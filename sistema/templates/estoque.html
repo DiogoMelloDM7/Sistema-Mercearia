@@ -13,8 +13,18 @@ Estoque
         <div id="error-message" class="{% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% endif %}" style="display: none;">             
                     <span>{{ message }}<span>
         </div>
+    {% endfor %}
+{% endif %}
+
+{% if lista_de_produtos_qtde_minima|length > 0 %}
+    <div id="error-quantity" class="alert-danger" style="margin: 20px;">             
+        {% for produto in lista_de_produtos_qtde_minima %}
+            <p>O produto {{ produto.nome }} (Código {{ produto.id }}) está com pouco estoque, restando apenas {{ produto.quantidade }} unidades!</p>
         {% endfor %}
-    {% endif %}
+
+        <button onclick="fechaAvisoProduto()" class="btn btn-sm btn-warning">Fechar</button>
+    </div>
+{% endif %}
 
 <div>
     <div class="busca-add-produto">

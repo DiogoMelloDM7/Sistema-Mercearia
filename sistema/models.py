@@ -7,19 +7,21 @@ class Produto(models.Model):
     valor_custo = models.DecimalField(max_digits=10, decimal_places=2)
     quantidade = models.IntegerField()
     grupo = models.CharField(max_length=100)
+    quantidade_minima_para_pedido = models.IntegerField()
 
     def __str__(self):
         return self.nome + " - " + self.grupo
 
 
 class Venda(models.Model):
+    cliente = models.ForeignKey("Cliente", related_name="vendas", on_delete=models.CASCADE)
     relatorio = models.ForeignKey("RelatorioVendas", related_name="vendas", on_delete=models.CASCADE, blank=True, null=True)
     produtos = models.ManyToManyField(Produto, through="ItensVenda")
     valor = models.DecimalField(max_digits=10, decimal_places=2)
     data = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"Venda {self.pk}"
+        return f"Venda {self.pk} - Cliente"
     
 
 class ItensVenda(models.Model):
@@ -76,3 +78,18 @@ class Cartao(models.Model):
 
     def __str__(self):
         return "Cartão de R$ " + f"{self.valor}" + " referente a venda de ID " + f"{self.venda}"
+    
+
+class Cliente(models.Model):
+
+    nome = models.CharField(max_length=100)
+    rua = models.CharField(max_length=100)
+    bairro = models.CharField(max_length=100)
+    cidade = models.CharField(max_length=100)
+    cpf = models.CharField(max_length=100)
+    telefone = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nome
+    

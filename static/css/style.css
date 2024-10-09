@@ -35,35 +35,59 @@
 .opcao-navbar:hover{
     background-color: #cac35e;  transition: .4s; color:white;
 }
-
-body{
-    background-color:#e6e4c4;
+body {
+    background-color: #e6e4c4;
 }
 
-.icone-img{
+.container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+}
+
+.imagem {
+    flex-basis: 85%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.img-grande {
+    width: 80%;
+    height: 80%; /* Pode definir um limite de altura se preferir */
+    object-fit: cover; /* Preenche o espaço disponível, possivelmente cortando parte da imagem */
+}
+
+
+
+.icones {
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
+    align-items: right;
+    margin-top: 25px;
+    margin-left: 100%;
+}
+
+.img-sm {
     width: 100px;
-    margin-left: auto; margin-right: 30px;
-    justify-content: flex-end;
-    
-    
+    height: 100px;
+    margin-top: 20px;
+    background-size: cover;
 }
 
-.img-sm{
-    width: 100px; height: 100px; margin-top: 50px; background-size: cover;
-}
-
-.img-sm:hover{
-    background-color: #f2f1dd; border-radius: 20%; transition: transform .5s; 
+.img-sm:hover {
+    background-color: #f2f1dd;
+    border-radius: 20%;
+    transition: transform 0.5s;
     cursor: pointer;
-    transform: scale(1.2)rotate(1deg);
+    transform: scale(1.2) rotate(1deg);
     border: 2px solid #d9d6ab;
     transform: translate(-3px, -3px);
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.699);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.7);
     padding: 10px;
-    
 }
+
 
 .inserir-item-venda{
     margin-left: 5%; margin-right: 5%; margin-top: 75px; 

@@ -192,6 +192,17 @@ class Estoque(ListView):
     template_name = "estoque.html"
     model = Produto
 
+    def get_context_data(self, **kwargs):
+    
+        context = super().get_context_data(**kwargs)
+        produtos = self.get_queryset()
+        lista_de_produtos_qtde_minima = []
+        for produto in produtos:
+            if produto.quantidade < produto.quantidade_minima_para_pedido:
+                lista_de_produtos_qtde_minima.append(produto)
+        context['lista_de_produtos_qtde_minima'] = lista_de_produtos_qtde_minima
+        return context
+
     def post(self, request, *args, **kwargs):
         termo_busca = request.POST.get("busca-produto","")
         if termo_busca:
@@ -209,17 +220,19 @@ def cadastrarProduto(request):
         preco_custo = request.POST.get("preco-custo")
         preco_venda = request.POST.get("preco-venda")
         quantidade = request.POST.get("quantidade")
+        quantidade_minima = request.POST.get("quantidademinima")
         try:
             preco_venda = preco_venda.replace(",",".")
             preco_custo = preco_custo.replace(",",".")
             preco_venda = float(preco_venda)
             preco_custo = float(preco_custo)
             quantidade = int(quantidade)
+            quantidade_minima = int(quantidade_minima)
         except:
             messages.error(request, "Ocorreu um erro ao cadastrar o produto. Verifique os dados e tente novamente!")
             return render(request, "cadastrarProduto.html")
         Produto.objects.create(
-            nome=nome_produto, valor_venda=preco_venda, valor_custo=preco_custo, quantidade=quantidade, grupo=grupo_produto
+            nome=nome_produto, valor_venda=preco_venda, valor_custo=preco_custo, quantidade=quantidade, grupo=grupo_produto, quantidade_minima_para_pedido=quantidade_minima
         )
         messages.success(request, "Produto cadastrado com sucesso!")
 
@@ -446,3 +459,6 @@ class EditarProduto(DetailView):
                     return redirect(reverse("sistema:editarProduto", args=[id]))
 
 
+def clientes(request):
+
+    return render(request, "clientes.html")

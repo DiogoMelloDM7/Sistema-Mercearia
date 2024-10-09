@@ -1,15 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
 {% block titulo %}
 Homepage
 {% endblock %}
 
 {% block content %}
+<div class="container">
 
-<div>
-    <div class='icone-img'>
+    <div class="icones">
         <a href="{% url 'sistema:caixa' %}">
             <img class="img-sm" src="{% static 'images/caixa.png' %}" title="CAIXA">
         </a>
@@ -22,7 +21,9 @@ Homepage
         <a href="{% url 'sistema:vendas' %}">
             <img class="img-sm" src="{% static 'images/vendas.png' %}" title='VENDAS'>
         </a>
+        <a href="{% url 'sistema:clientes' %}">
+            <img class="img-sm" src="{% static 'images/clientes.webp' %}" title='Clientes'>
+        </a>
     </div>
-<div>
-
+</div>
 {% endblock %}
