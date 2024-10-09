@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import DetailView, ListView
-from .models import RelatorioVendas, RelatorioCaixa, Produto, Credito, Debito, Venda, ItensVenda, Cartao
+from .models import RelatorioVendas, RelatorioCaixa, Produto, Credito, Debito, Venda, ItensVenda, Cartao, Cliente
 from django.contrib import messages
 from django.urls import reverse
 from django.db.models import Q, Sum
@@ -460,5 +460,41 @@ class EditarProduto(DetailView):
 
 
 def clientes(request):
+
+    clientes = Cliente.objects.all()
+    context = {}
+    context['clientes'] = clientes
+    
+
+    if request.method == "POST":
+        button_type = request.POST.get("btnSubmit")
+        if button_type == "atualizarCliente":
+            pass
+        elif button_type == "cadastrarCliente":
+            try:
+                nome_cliente = request.POST.get("nomeadd")
+                rua_cliente = request.POST.get("ruaadd")
+                bairro_cliente = request.POST.get("bairroadd")
+                cidade_cliente = request.POST.get("cidadeadd")
+                cpf_cliente = request.POST.get("cpfadd")
+                telefone_cliente = request.POST.get("telefoneadd")
+                email_cliente = request.POST.get("emailadd")
+                Cliente.objects.create(
+                nome = nome_cliente,
+                rua = rua_cliente,
+                bairro = bairro_cliente,
+                cidade = cidade_cliente,
+                cpf = cpf_cliente,
+                telefone = telefone_cliente,
+                email = email_cliente
+                )
+                messages.success(request, "Cliente cadastrado com sucesso!")
+            except:
+                messages.error(request, "Ocorreu um erro ao cadastrar o cliente. Verifique os dados e tente novamente!")
+                return render(request, "clientes.html", context)
+        
+
+
+            
 
     return render(request, "clientes.html")

@@ -7,6 +7,14 @@ Clientes
 {% endblock %}
 
 {% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div id="error-message" class="{% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% endif %}" style="display: none;">             
+                    <span>{{ message }}<span>
+        </div>
+    {% endfor %}
+{% endif %}
 <div class="container">
     <div class="row">
         <div id="opcoes-cliente" class="col-md-4 p-3 m-3">
@@ -18,12 +26,11 @@ Clientes
             </div>
             <div>
                 <button class="btn btn-warning mb-5" style="width: 200px; height:75px;font-size:1.3em;" onclick="exibeCliente()">Visualizar Cliente</button>
-                <input type="text" placeholder="Informe o cliente">
             </div>
         </div>
     </div>
     <div id="informacoes-cliente" class="col-md-8 p-5 m-5">
-        <table id="tabelaDeClientes">
+        <table id="tabelaDeClientes" style="display: none;">
             <tr>
                 <th>Cliente</th>
                 <th>Rua</th>
@@ -33,48 +40,61 @@ Clientes
                 <th>Telefone</th>
                 <th>E-mail</th>
             </tr>
+            {% for cliente in clientes %}
+                <tr>
+                    <td>{{ cliente.nome }}</td>
+                    <td>{{ cliente.rua }}</td>
+                    <td>{{ cliente.bairro }}</td>
+                    <td>{{ cliente.cpf }}</td>
+                    <td>{{ cliente.telefone }}</td>
+                    <td>{{ cliente.email }}</td>
+                </tr>
+            {% endfor %}
         </table>
 
-        <form id="formEditar">
+        <form id="formEditar" style="display:none;" method="post">
+            {% csrf_token %}
             <h1 class="fs-2">Editar Cliente</h1>
             <div class="mb-3">
                 <label for="nome" class="form-label">Nome</label>
-                <input type="text" class="form-control" id="nome" name="nome">
+                <input type="text" class="form-control" id="nome" name="nome" required>
                 <label for="rua" class="form-label">Rua</label>
-                <input type="text" class="form-control" id="rua" name="rua">
+                <input type="text" class="form-control" id="rua" name="rua" required>
                 <label for="bairro" class="form-label">Bairro</label>
-                <input type="text" class="form-control" id="bairro" name="bairro">
+                <input type="text" class="form-control" id="bairro" name="bairro" required>
                 <label for="cidade" class="form-label">Cidade</label>
-                <input type="text" class="form-control" id="cidade" name="cidade">
+                <input type="text" class="form-control" id="cidade" name="cidade" required>
                 <label for="cpf" class="form-label">CPF</label>
-                <input type="text" class="form-control" id="cpf" name="cpf">
+                <input type="text" class="form-control" id="cpf" name="cpf" pattern="\d{11}" maxlength="11" required title="Por favor, insira apenas 11 dígitos.">
                 <label for="telefone" class="form-label">Telefone</label>
-                <input type="text" class="form-control" id="telefone" name="telefone">
+                <input type="text" class="form-control" id="telefone" name="telefone" pattern="\d" maxlength="20" required title="Por favor, insira apenas dígitos.">
                 <label for="cpf" class="form-label">E-mail</label>
-                <input type="email" class="form-control" id="email" name="email">
-                <button type="submit" name="atualizarCliente" class="btn btn-primary btn-lg mt-2">Atualizar</button>
-          </form>
-
-          <form id="formCadastrar">
-            <h1 class="fs-2">Cadastrar Cliente</h1>
-            <div class="mb-3">
-                <label for="nome" class="form-label">Nome</label>
-                <input type="text" class="form-control" id="nome" name="nome">
-                <label for="rua" class="form-label">Rua</label>
-                <input type="text" class="form-control" id="rua" name="rua">
-                <label for="bairro" class="form-label">Bairro</label>
-                <input type="text" class="form-control" id="bairro" name="bairro">
-                <label for="cidade" class="form-label">Cidade</label>
-                <input type="text" class="form-control" id="cidade" name="cidade">
-                <label for="cpf" class="form-label">CPF</label>
-                <input type="text" class="form-control" id="cpf" name="cpf">
-                <label for="telefone" class="form-label">Telefone</label>
-                <input type="text" class="form-control" id="telefone" name="telefone">
-                <label for="cpf" class="form-label">E-mail</label>
-                <input type="email" class="form-control" id="email" name="email">
-                <button type="submit" name="cadastrarCliente" class="btn btn-success btn-lg mt-2">Cadastrar</button>
-          </form>
-    </div>
+                <input type="email" class="form-control" id="email" name="email" required>
+                <button type="submit" name="btnSubmit" value="atualizarCliente" class="btn btn-primary btn-lg mt-2">Atualizar Cliente</button>
+            </div>
+        </form>
+            
+            <form id="formCadastro" style="display:none;" method="post">
+                {% csrf_token %}
+                <h1 class="fs-2">Cadastrar Cliente</h1>
+                <div class="mb-3">
+                    <label for="nome" class="form-label">Nome</label>
+                    <input type="text" class="form-control" id="nome" name="nomeadd" required>
+                    <label for="rua" class="form-label">Rua</label>
+                    <input type="text" class="form-control" id="rua" name="ruaadd" required>
+                    <label for="bairro" class="form-label">Bairro</label>
+                    <input type="text" class="form-control" id="bairro" name="bairroadd" required>
+                    <label for="cidade" class="form-label">Cidade</label>
+                    <input type="text" class="form-control" id="cidade" name="cidadeadd" required>
+                    <label for="cpf" class="form-label">CPF</label>
+                    <input type="text" class="form-control" id="cpf" name="cpfadd" pattern="\d{11}" maxlength="11" required title="Por favor, insira apenas 11 dígitos.">
+                    <label for="telefone" class="form-label">Telefone</label>
+                    <input type="text" class="form-control" id="telefone" name="telefoneadd" pattern="\d" minlength="9" required title="Por favor, insira apenas dígitos sendo no mínimo 9.">
+                    <label for="cpf" class="form-label">E-mail</label>
+                    <input type="email" class="form-control" id="email" name="emailadd" required>
+                    <button type="submit" name="btnSubmit" value="cadastrarCliente" class="btn btn-success btn-lg mt-2">Cadastrar Cliente</button>
+                </div>
+            </form>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

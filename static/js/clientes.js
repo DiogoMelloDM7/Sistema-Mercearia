@@ -1,11 +1,20 @@
-function exibeCadastro(){
-    let cadastro = $("")
+function exibeCadastro() {
+
+    $("#formEditar").hide();
+    $("#tabelaDeClientes").hide();
+    $("#formCadastro").show();
 }
 
-function exibeEditarCadastro(){
-
+function exibeEditarCadastro() {
+    
+    $("#formCadastro").hide();
+    $("#formEditar").show();
+    $("#tabelaDeClientes").show();
 }
 
-function exibeCliente(){
+function exibeCliente() {
 
+    $("#formCadastro").hide();
+    $("#formEditar").hide();
+    $("#tabelaDeClientes").show();
 }

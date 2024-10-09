@@ -81,14 +81,15 @@ class Cartao(models.Model):
     
 
 class Cliente(models.Model):
+    
+    nome = models.CharField(max_length=100, null=False, blank=False)
+    rua = models.CharField(max_length=100, null=False, blank=False)
+    bairro = models.CharField(max_length=100, null=False, blank=False)
+    cidade = models.CharField(max_length=100, null=False, blank=False)
+    cpf = models.CharField(max_length=100, null=False, blank=False)
+    telefone = models.CharField(max_length=100, null=False, blank=False)
+    email = models.CharField(max_length=100, null=False, blank=False)
 
-    nome = models.CharField(max_length=100)
-    rua = models.CharField(max_length=100)
-    bairro = models.CharField(max_length=100)
-    cidade = models.CharField(max_length=100)
-    cpf = models.CharField(max_length=100)
-    telefone = models.CharField(max_length=100)
-    email = models.CharField(max_length=100)
 
     def __str__(self):
         return self.nome
