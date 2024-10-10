@@ -30,27 +30,16 @@ Clientes
         </div>
     </div>
     <div id="informacoes-cliente" class="col-md-8 p-5 m-5">
-        <table id="tabelaDeClientes" style="display: none;">
-            <tr>
-                <th>Cliente</th>
-                <th>Rua</th>
-                <th>Bairro</th>
-                <th>Cidade</th>
-                <th>CPF</th>
-                <th>Telefone</th>
-                <th>E-mail</th>
-            </tr>
-            {% for cliente in clientes %}
-                <tr>
-                    <td>{{ cliente.nome }}</td>
-                    <td>{{ cliente.rua }}</td>
-                    <td>{{ cliente.bairro }}</td>
-                    <td>{{ cliente.cpf }}</td>
-                    <td>{{ cliente.telefone }}</td>
-                    <td>{{ cliente.email }}</td>
-                </tr>
-            {% endfor %}
-        </table>
+        <div id="tabelaDeClientes" style="display: none;">
+            <input type="text" name="clienteNome" placeholder="Informe o nome do cliente" class="form-control mb-2">
+            <table id="tabelaClientes" class="table table-striped">
+                <thead>
+                    
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>  
 
         <form id="formEditar" style="display:none;" method="post">
             {% csrf_token %}
@@ -89,13 +78,18 @@ Clientes
                     <label for="cpf" class="form-label">CPF</label>
                     <input type="text" class="form-control" id="cpf" name="cpfadd" pattern="\d{11}" maxlength="11" required title="Por favor, insira apenas 11 dígitos.">
                     <label for="telefone" class="form-label">Telefone</label>
-                    <input type="text" class="form-control" id="telefone" name="telefoneadd" pattern="\d" minlength="9" required title="Por favor, insira apenas dígitos sendo no mínimo 9.">
+                    <input type="text" class="form-control" id="telefone" name="telefoneadd" pattern="\d{8,20}" maxlength="20" required title="Por favor, insira apenas dígitos sendo no mínimo 8.">
                     <label for="cpf" class="form-label">E-mail</label>
                     <input type="email" class="form-control" id="email" name="emailadd" required>
                     <button type="submit" name="btnSubmit" value="cadastrarCliente" class="btn btn-success btn-lg mt-2">Cadastrar Cliente</button>
                 </div>
             </form>
 </div>
+
+
+<script>
+    let clientes = JSON.parse('{{ clientes|safe }}')
+</script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="{% static 'js/clientes.js' %}"></script>

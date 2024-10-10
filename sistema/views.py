@@ -458,13 +458,15 @@ class EditarProduto(DetailView):
                     messages.error(request, "Ocorreu um erro ao excluir o produto. Verifique os dados e tente novamente!")
                     return redirect(reverse("sistema:editarProduto", args=[id]))
 
+from django.http import JsonResponse
+import json
 
 def clientes(request):
 
-    clientes = Cliente.objects.all()
     context = {}
-    context['clientes'] = clientes
-    
+    clientes_list = Cliente.objects.all().values('nome', 'rua', 'bairro', 'cidade', 'cpf', 'telefone', 'email')
+    context['clientes'] = json.dumps(list(clientes_list))
+    print(clientes_list)    
 
     if request.method == "POST":
         button_type = request.POST.get("btnSubmit")
@@ -491,10 +493,10 @@ def clientes(request):
                 messages.success(request, "Cliente cadastrado com sucesso!")
             except:
                 messages.error(request, "Ocorreu um erro ao cadastrar o cliente. Verifique os dados e tente novamente!")
-                return render(request, "clientes.html", context)
+            return redirect('sistema:clientes')
         
 
 
             
 
-    return render(request, "clientes.html")
+    return render(request, "clientes.html", context)
