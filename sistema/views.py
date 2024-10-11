@@ -464,14 +464,36 @@ import json
 def clientes(request):
 
     context = {}
-    clientes_list = Cliente.objects.all().values('nome', 'rua', 'bairro', 'cidade', 'cpf', 'telefone', 'email')
-    context['clientes'] = json.dumps(list(clientes_list))
-    print(clientes_list)    
+    clientes_list = Cliente.objects.all().values('nome', 'rua', 'bairro', 'cidade', 'cpf', 'telefone', 'email', 'id')
+    context['clientes'] = json.dumps(list(clientes_list))    
 
     if request.method == "POST":
         button_type = request.POST.get("btnSubmit")
         if button_type == "atualizarCliente":
-            pass
+            try:
+                nome_cliente = request.POST.get("nome")
+                rua_cliente = request.POST.get("rua")
+                bairro_cliente = request.POST.get("bairro")
+                cidade_cliente = request.POST.get("cidade")
+                cpf_cliente = request.POST.get("cpf")
+                telefone_cliente = request.POST.get("telefone")
+                email_cliente = request.POST.get("email")
+                id_cliente = request.POST.get("idCliente")
+                cliente = get_object_or_404(Cliente, id=id_cliente)
+                cliente.nome = nome_cliente
+                cliente.rua = rua_cliente
+                cliente.bairro = bairro_cliente
+                cliente.cidade = cidade_cliente
+                cliente.cpf = cpf_cliente
+                cliente.telefone = telefone_cliente
+                cliente.email = email_cliente
+                cliente.save()
+                print(nome_cliente, rua_cliente, bairro_cliente, cidade_cliente, cpf_cliente, telefone_cliente, email_cliente, id_cliente)
+                messages.success(request, "Cliente alterado com sucesso!")
+            except:
+                messages.error(request, "Ocorreu um erro ao alterar o cliente. Verifique os dados e tente novamente!")
+            return redirect('sistema:clientes')
+                
         elif button_type == "cadastrarCliente":
             try:
                 nome_cliente = request.POST.get("nomeadd")
@@ -494,8 +516,19 @@ def clientes(request):
             except:
                 messages.error(request, "Ocorreu um erro ao cadastrar o cliente. Verifique os dados e tente novamente!")
             return redirect('sistema:clientes')
-        
 
+        elif button_type == "deletarCliente":
+            try:
+                id_cliente = request.POST.get("idCliente")
+                cliente = get_object_or_404(Cliente, id=id_cliente)
+                cliente.delete()
+                messages.success(request, "Cliente excluído com sucesso!")
+                return redirect("sistema:clientes")
+            except: 
+                messages.error(request, "Ocorreu um erro ao excluir o cliente. Verifique os dados e tente novamente!")
+                return redirect("sistema:clientes")
+                
+            
 
             
 

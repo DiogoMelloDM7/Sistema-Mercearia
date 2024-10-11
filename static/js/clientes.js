@@ -158,8 +158,8 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on("click", '.edit-cliente-btn', function(){
-
+    $(document).on("click", '.edit-cliente-btn', function(event){
+        event.preventDefault(); 
         let indexVenda = $(this).data('index');
 
         $("#nomeEdit").val(clientes[indexVenda].nome);
@@ -169,16 +169,14 @@ $(document).ready(function () {
         $("#cpfEdit").val(clientes[indexVenda].cpf);
         $("#telefoneEdit").val(clientes[indexVenda].telefone);
         $("#emailEdit").val(clientes[indexVenda].email);
+        $("#idCliente").val(clientes[indexVenda].id);
     })
 
 });
 
 function resetaFormEditar(){
-    $("#nomeEdit").val('');
-        $("#ruaEdit").val('');
-        $("#bairroEdit").val('');
-        $("#cidadeEdit").val('');
-        $("#cpfEdit").val('');
-        $("#telefoneEdit").val('');
-        $("#emailEdit").val('');
+    $("#formEditar").reset();
+
 }
+
+resetaFormEditar();
