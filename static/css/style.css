@@ -394,6 +394,10 @@ td, th {
     color: rgba(0, 0, 0, 0.849);
 }
 
+#tabelaClientes {
+    width: 100%; /* Faz a tabela ocupar a largura total do modal */
+    table-layout: auto; /* Permite que as colunas se ajustem automaticamente */
+}
 
 @media screen and (max-width: 1400px) {
     

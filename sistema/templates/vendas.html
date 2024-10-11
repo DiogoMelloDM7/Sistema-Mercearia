@@ -19,15 +19,57 @@ Vendas
 <div>
 <div id='main-vendas'>
     <div class="inserir-item-venda">
-        <form method="post">
+        <div class="d-flex justify-content-center mb-5">
+        <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalClientes" onclick="carregaTabelaClientes()">
+                Selecione o cliente da venda
+            </button>
+        </div>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="ModalClientes" tabindex="-1" aria-labelledby="ModalClientes" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Selecione o cliente da venda</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBodyTabelaclientesModal" class="table-responsive">
+                    <input type="text" id="buscaClienteVenda" placeholder="Busque o nome do cliente" class="mb-2 form-control">
+                    <table id="tabelaClientes" class="table table-striped table-hover table-responsive">
+                        <thead>
+                        </thead>
+
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn-close-modal">Fechar</button>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <form method="post" class="row">
             {% csrf_token %}
-            <label for="idproduto" class='label-vendas'>Código Item</label>
-            <input id='idproduto' name='produto' type='text' class='input-produto' placeholder="Insira aqui o código do produto" required>
-            <label for="idquantidade" class='label-vendas'>Quantidade</label>
-            <input id="idquantidade" name='quantidade' type='number' class='input' required>
-            <label for="idvalor" class='label-vendas'>Valor Unitário</label>
-            <input id="idvalor" name='valor' type='text' class='input' required>
-            <button type='submit' name="confirm" value="add" class='btn-add'>ADD</button>
+            <div class="col-md-3">
+                <label for="idproduto" class='label-vendas'>Código Item</label>
+                <input id='idproduto' name='produto' type='text' class='input' placeholder="Insira aqui o código do produto" required>
+            </div>
+            <div class="col-md-3">
+                <label for="idquantidade" class='label-vendas'>Quantidade</label>
+                <input id="idquantidade" name='quantidade' type='number' class='input' required>
+            </div>
+            <div class="col-md-3">
+                <label for="idvalor" class='label-vendas'>Valor Unitário</label>
+                <input id="idvalor" name='valor' type='text' class='input' required>
+            </div>
+            <div class="col-md-3">
+                <div>&nbsp;</div>
+                <div>&nbsp;</div>
+                <button type='submit' name="confirm" value="add" class='btn-add' >ADD</button>
+            </div>
 
         </form>
     </div>
@@ -42,20 +84,26 @@ Vendas
                 <button type="submit" name="confirm" value="search" class='btn-add'>BUSCAR</button>
             </form>
         </div>
-        <table>
-            <tr>
-                <th>PRODUTO<th>GRUPO<th>QUANTIDADE EM ESTOQUE <th>PREÇO DE VENDA <th>PREÇO DE CUSTO<th>CÓDIGO PRODUTO
-            </tr>
-            {% for produto in object_list %}
-            <tr>
-                <td class="produto-tabela"> {{ produto.nome }}
-                <td> {{ produto.grupo }}
-                <td> {{ produto.quantidade }} unidades
-                <td> {{ produto.valor_venda }}
-                <td> {{ produto.valor_custo }}
-                <td> {{ produto.id }}
+        <table id="tabelaVendas">
+            <thead> 
 
-            </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <th>PRODUTO<th>GRUPO<th>QUANTIDADE EM ESTOQUE <th>PREÇO DE VENDA <th>PREÇO DE CUSTO<th>CÓDIGO PRODUTO
+                </tr>
+                {% for produto in object_list %}
+                <tr>
+                    <td class="produto-tabela"> {{ produto.nome }}
+                    <td> {{ produto.grupo }}
+                    <td> {{ produto.quantidade }} unidades
+                    <td> {{ produto.valor_venda }}
+                    <td> {{ produto.valor_custo }}
+                    <td> {{ produto.id }}
+
+                </tr>
+            <tbody>
             {% endfor %}
         </table>
     </div>
@@ -149,5 +197,16 @@ Vendas
 
         </form>
     </div>
+
+    <input type="hidden" name="idCliente" id="idCliente">
     
+
+<script>
+    let clientes_venda = JSON.parse('{{ clientes|safe }}')
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="{% static 'js/vendas.js' %}"></script>
 {% endblock %}

@@ -6,6 +6,9 @@ from django.urls import reverse
 from django.db.models import Q, Sum
 from datetime import date, datetime, timedelta
 from decimal import Decimal, ROUND_DOWN
+from django.http import JsonResponse
+import json
+
 
 
 def homepage(request):
@@ -24,10 +27,16 @@ class Vendas(ListView):
     def get(self, request, *args, **kwargs):
         limpa_lista_vendas()
         return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = {}
+        clientes_list = Cliente.objects.all().values('nome', 'rua', 'bairro', 'cidade', 'cpf', 'telefone', 'email', 'id')
+        context['clientes'] = json.dumps(list(clientes_list))
+        return context
 
     def post(self, request, *args, **kwargs):
         button_type = request.POST.get("confirm")
-        
+        context = self.get_context_data()
         valor_total_venda = 0
         if button_type == "search":
             termo_busca = request.POST.get("busca-produto","")
@@ -35,7 +44,10 @@ class Vendas(ListView):
                 produtos = Produto.objects.filter(Q(nome__icontains=termo_busca) | Q(grupo__icontains=termo_busca))
             else:
                 produtos = Produto.objects.all()
-            return render(request, self.template_name, {"object_list":produtos, "itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
+            context['object_list'] = produtos
+            context['itens_venda'] = lista_vendas
+            context['valor_total_venda'] = valor_total_venda
+            return render(request, self.template_name, context)
         if button_type == "add":
             try:
                 id_produto = request.POST.get("produto")
@@ -50,14 +62,19 @@ class Vendas(ListView):
             
             except:
                 messages.error(request, "Ocorreu um erro ao processar os dados inseridos, verifique os dados e tente novamente!")
-                return render(request, self.template_name, {"itens_venda":lista_vendas, "valor_total_venda": valor_total_venda})
-            valor_total = quantidade * valor
+                context['itens_venda'] = lista_vendas
+                context['valor_total_venda'] = valor_total_venda
+                return render(request, self.template_name, context)
             
+            valor_total = quantidade * valor
             itens_do_pedido = (produto.nome, quantidade, valor, valor_total)
             lista_vendas.append(itens_do_pedido)
             for item in lista_vendas:
                 valor_total_venda += item[3]
-            return render(request, self.template_name, {"itens_venda":lista_vendas, "valor_total_venda": valor_total_venda})
+
+            context['itens_venda'] = lista_vendas
+            context['valor_total_venda'] = valor_total_venda
+            return render(request, self.template_name, context)
         if button_type == "del":
             indice = request.POST.get("indice")
             try: 
@@ -72,14 +89,24 @@ class Vendas(ListView):
                     lista_vendas.pop(0)
                 for item in lista_vendas:
                     valor_total_venda += item[3]
-                
-                return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
+                context['itens_venda'] = lista_vendas
+                context['valor_total_venda'] = valor_total_venda
+                return render(request, self.template_name, context)
             except: 
-                return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
+                context['itens_venda'] = lista_vendas
+                context['valor_total_venda'] = valor_total_venda
+                return render(request, self.template_name, context)
 
         cartao_pix_dinheiro = False
         if button_type == "confirm-sale":
-
+            id_cliente_da_venda = request.POST.get("idCliente")
+            print(id_cliente_da_venda)
+            if not id_cliente_da_venda:
+                messages.error(request, f"Por favor selecione um cliente para finalizar a venda!")
+                return render(request, self.template_name, context)            
+            cliente = get_object_or_404(Cliente, id=int(id_cliente_da_venda))
+            if cliente == None:
+                messages.error(request, f"Aconteceu um erro ao associar essa venda ao cliente selecionado")
             for item in lista_vendas:
                     nome_produto = item[0]
                     quantidade = item[1]
@@ -87,7 +114,9 @@ class Vendas(ListView):
                     verifica_produto = (produto.quantidade - quantidade)
                     if verifica_produto < 0:
                         messages.error(request, f"O item {nome_produto} não possui estoque suficiente para completar essa venda!")
-                        return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
+                        context['itens_venda'] = lista_vendas
+                        context['valor_total_venda'] = valor_total_venda
+                        return render(request, self.template_name, context)
 
             forma_pagamento = request.POST.get("pagamento")
             if forma_pagamento == "dinheiro+cartao":
@@ -108,7 +137,9 @@ class Vendas(ListView):
                     valor_dinheiro = valor_dinheiro.quantize(decimal_context, rounding=ROUND_DOWN)
                     if (valor_cartao + valor_dinheiro) != valor_total_venda:
                         messages.error(request, "Valor inserido não bate com o valor da compra, verifique os dados e tente novamente!")
-                        return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
+                        context['itens_venda'] = lista_vendas
+                        context['valor_total_venda'] = valor_total_venda
+                        return render(request, self.template_name, context)
                     cartao_pix_dinheiro = True
                     
                 except:
@@ -129,6 +160,7 @@ class Vendas(ListView):
                     produto.quantidade -= quantidade
                     produto.save()
                     ItensVenda.objects.create(venda=venda, produto = produto, quantidade = quantidade)
+                venda.cliente = cliente
                 venda.valor = Decimal(valor_total_venda)
                 venda.save()
                 data_hoje = date.today()
@@ -151,10 +183,14 @@ class Vendas(ListView):
                 relatorio_venda.valorfinal += Decimal(valor_total_venda)
                 relatorio_venda.save()
                 limpa_lista_vendas()
-                return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
+                context['valor_total_venda'] = valor_total_venda
+                context['itens_venda'] = lista_vendas
+                return render(request, self.template_name, context)
             else:
                 messages.error(request, "Para finalizar uma venda, você precisa inserir algum item!")
-                return render(request, self.template_name, {"itens_venda": lista_vendas, "valor_total_venda": valor_total_venda})
+                context['valor_total_venda'] = valor_total_venda
+                context['itens_venda'] = lista_vendas
+                return render(request, self.template_name, context)
 
 
 
@@ -458,8 +494,6 @@ class EditarProduto(DetailView):
                     messages.error(request, "Ocorreu um erro ao excluir o produto. Verifique os dados e tente novamente!")
                     return redirect(reverse("sistema:editarProduto", args=[id]))
 
-from django.http import JsonResponse
-import json
 
 def clientes(request):
 

@@ -13,6 +13,5 @@ urlpatterns = [
     path('relatoriocaixa/<int:pk>', RelatorioDeCaixa.as_view(), name="relatoriocaixa"),
     path('cadastrarproduto/', cadastrarProduto, name="cadastrarProduto"),
     path('editarproduto/<int:pk>', EditarProduto.as_view(), name="editarProduto"),
-    path('clientes', clientes, name="clientes")
-    
+    path('clientes/', clientes, name="clientes"),
 ]
