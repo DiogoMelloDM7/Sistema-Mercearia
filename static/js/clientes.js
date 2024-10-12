@@ -37,7 +37,7 @@ function constroiTabela(){
     `)
 
     $("#tabelaClientes tbody").empty();
-    clientes.forEach(function(cliente, index){
+    clientes.forEach(function(cliente){
         $("#tabelaClientes tbody").append(`
             <tr>
             <td>${cliente.nome}</td>
@@ -105,7 +105,7 @@ $(document).ready(function () {
         `);
 
         $("#tabelaClientes tbody").empty();
-        clientes.forEach(function (cliente, index) {
+        clientes.forEach(function (cliente) {
             if (cliente.nome.toLowerCase().includes(clienteNome)) {
                 $("#tabelaClientes tbody").append(`
                     <tr>
@@ -134,6 +134,7 @@ $(document).ready(function () {
                 <th>CPF</th>
                 <th>Telefone</th>
                 <th>E-mail</th>
+                <th>Ações</th>
             </tr>
         `);
 
@@ -175,7 +176,7 @@ $(document).ready(function () {
 });
 
 function resetaFormEditar(){
-    $("#formEditar").reset();
+    $("#formEditar")[0].reset();
 
 }
 

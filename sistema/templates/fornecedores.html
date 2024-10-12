@@ -20,20 +20,20 @@ Fornecedores
     <div class="row">
         <div id="opcoes-cliente" class="col-md-4 p-3 m-3">
             <div class="">
-                <button class="btn btn-success mb-5" style="width: 200px; height:75px; font-size:1.3em;" onclick="()">Cadastrar Fornecedor</button>
+                <button class="btn btn-success mb-5" style="width: 200px; height:75px; font-size:1.3em;" onclick="exibeFormCadastro()">Cadastrar Fornecedor</button>
             </div>
             <div>
-                <button class="btn btn-primary mb-5" style="width: 200px; height:75px;font-size:1.3em;" onclick="()">Editar Fornecedor</button>
+                <button class="btn btn-primary mb-5" style="width: 200px; height:75px;font-size:1.3em;" onclick="exibeFormEdicao()">Editar Fornecedor</button>
             </div>
             <div>
-                <button class="btn btn-warning mb-5" style="width: 200px; height:75px;font-size:1.3em;" onclick="()">Visualizar Fornecedor</button>
+                <button class="btn btn-warning mb-5" style="width: 200px; height:75px;font-size:1.3em;" onclick="exibeFornecedores()">Visualizar Fornecedor</button>
             </div>
         </div>
     </div>
 
     <div id="informacoes-cliente" class="col-md-8 p-2 m-2">
         <div id="tabelaDeFornecedores" style="display: none;">
-            <input type="text" id="clienteNome" placeholder="Informe o nome do Fornecedor" class="form-control mb-2">
+            <input type="text" id="fornecedorNome" placeholder="Informe o nome do Fornecedor" class="form-control mb-2">
             <table id="tabelaFornecedores" class="table table-striped">
                 <thead>
                     
@@ -44,40 +44,41 @@ Fornecedores
             </table>
         </div>  
 
-        <form id="formEditar" style="display:block;" method="post">
+        <form id="formEditar" style="display:none;" method="post">
             
             <input type="text" id="fornecedorEditarNome" placeholder="Informe o nome do fornecedor" class="form-control mb-2">
-            <table id="tabelaEdicaoFornecedores" class="table table-striped">
-                <thead>
-                    Tabela
-                </thead>
-                <tbody>
+            <div class="table-responsive">
+                <table id="tabelaEdicaoFornecedores" class="table table-striped">
+                    <thead>
 
-                </tbody>
-            </table>
-            
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
             {% csrf_token %}
             <h1 class="fs-2">Editar Fornecedor</h1>
             <div class="mb-3">
                 <label for="nomeEdit" class="form-label">Nome</label>
                 <input type="text" class="form-control" id="nomeEdit" name="nomeEdit" required>
                 <label for="cnpjEdit" class="form-label">CNPJ</label>
-                <input type="text" class="form-control" id="cnpjEdit" name="cnpjEdit" pattern="\d{14}" maxlength="14" required title="Por favor, insira apenas 14 dígitos." placeholder="Digite apenas os números">
+                <input type="text" class="form-control" id="cnpjEdit" name="cnpjEdit" pattern="\d{14}" maxlength="14" required title="Por favor, insira apenas 14 dígitos." placeholder="Digite apenas os números" required>
                 <label for="ieEdit" class="form-label">IE</label>
                 <input type="text" class="form-control" id="ieEdit" name="ieEdit">
                 <label for="enderecoEdit" class="form-label">Endereço</label>
                 <input type="text" class="form-control" id="enderecoEdit" name="enderecoEdit" required>
                 <label for="cidadeEdit" class="form-label">Cidade</label>
-                <input type="text" class="form-control" id="cidadeEdit" name="cidadeEdit">
+                <input type="text" class="form-control" id="cidadeEdit" name="cidadeEdit" required>
                 <label for="estadoEdit" class="form-label">Estado</label>
-                <input type="text" class="form-control" id="estadoEdit" name="estadoEdit">
+                <input type="text" class="form-control" id="estadoEdit" name="estadoEdit" required>
                 <label for="cepEdit" class="form-label">CEP</label>
-                <input type="email" class="form-control" id="cepEdit" name="cepEdit" required>
+                <input type="text" class="form-control" id="cepEdit" name="cepEdit" required placeholder="Digite apenas números" maxlength="9">
                 <label for="telefoneEdit" class="form-label">Telefone</label>
-                <input type="email" class="form-control" id="telefoneEdit" name="telefoneEdit" pattern="\d{8,20}" maxlength="20" required title="Por favor, insira apenas dígitos.">
+                <input type="text" class="form-control" id="telefoneEdit" name="telefoneEdit" pattern="\d{8,20}" maxlength="20" required title="Por favor, insira apenas dígitos.">
                 <label for="emailEdit" class="form-label">E-mail</label>
                 <input type="email" class="form-control" id="emailEdit" name="emailEdit" required>
-                <input type="hidden" id="idFornecedor" name="ifFornecedor">
+                <input type="hidden" id="idFornecedor" name="idFornecedor">
                 <div class="d-flex justify-content-between">
                     <button type="submit" name="btnSubmit" value="atualizarFornecedor" class="btn btn-primary btn-lg mt-2">Atualizar Fornecedor</button>
                     <button type="submit" name="btnSubmit" value="deletarFornecedor" class="btn btn-danger btn-lg mt-2">Excluir Fornecedor</button>
@@ -85,6 +86,31 @@ Fornecedores
             </div>
         </form>
 
+        <form id="formCadastro" style="display:none;" method="post">
+            {% csrf_token %}
+            <h1 class="fs-2">Cadastrar Fornecedor</h1>
+            <div class="mb-3">
+                <label for="nomeAdd" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="nomeAdd" name="nomeAdd" required>
+                <label for="cnpjAdd" class="form-label">CNPJ</label>
+                <input type="text" class="form-control" id="cnpjAdd" name="cnpjAdd" pattern="\d{14}" maxlength="14" required title="Por favor, insira apenas 14 dígitos." placeholder="Digite apenas os números">
+                <label for="ieAdd" class="form-label">Inscrição Estadual</label>
+                <input type="text" class="form-control" id="ieAdd" name="ieAdd">
+                <label for="enderecoAdd" class="form-label">Endereço</label>
+                <input type="text" class="form-control" id="enderecoAdd" name="enderecoAdd" required>
+                <label for="cidadeAdd" class="form-label">Cidade</label>
+                <input type="text" class="form-control" id="cidadeAdd" name="cidadeAdd" required>
+                <label for="estadoAdd" class="form-label">Estado</label>
+                <input type="text" class="form-control" id="estadoAdd" name="estadoAdd" required>
+                <label for="cepAdd" class="form-label">CEP</label>
+                <input type="text" class="form-control" id="cepAdd" name="cepAdd" required placeholder="Digite apenas números" maxlength="9">
+                <label for="telefoneAdd" class="form-label">Telefone</label>
+                <input type="text" class="form-control" id="telefoneAdd" name="telefoneAdd" pattern="\d{8,20}" maxlength="20" required title="Por favor, insira apenas dígitos.">
+                <label for="emailAdd" class="form-label">E-mail</label>
+                <input type="email" class="form-control" id="emailAdd" name="emailAdd" required>
+                <button type="submit" name="btnSubmit" value="cadastrarFornecedor" class="btn btn-success btn-lg mt-2">Cadastrar Fornecedor</button>
+            </div>
+        </form>
 
     </div>
 
@@ -93,7 +119,7 @@ Fornecedores
 
 
 <script>
-    let clientes = JSON.parse('{{ clientes|safe }}')
+    let lista_fornecedores = JSON.parse('{{ lista_fornecedores|escapejs }}')
 </script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

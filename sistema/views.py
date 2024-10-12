@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import DetailView, ListView
-from .models import RelatorioVendas, RelatorioCaixa, Produto, Credito, Debito, Venda, ItensVenda, Cartao, Cliente
+from .models import RelatorioVendas, RelatorioCaixa, Produto, Credito, Debito, Venda, ItensVenda, Cartao, Cliente, Fornecedor
 from django.contrib import messages
 from django.urls import reverse
 from django.db.models import Q, Sum
@@ -8,7 +8,7 @@ from datetime import date, datetime, timedelta
 from decimal import Decimal, ROUND_DOWN
 from django.http import JsonResponse
 import json
-from validate_docbr import CPF
+from validate_docbr import CPF, CNPJ
 
 
 
@@ -583,4 +583,106 @@ def clientes(request):
 
 def fornecedores(request):
 
-    return render(request, 'fornecedores.html')
+    context = {}
+    lista_fornecedores = Fornecedor.objects.all().values('nome_empresa', 'cnpj', 'inscricao_estadual', 'endereco', 'cidade', 'estado', 'telefone', 'email', 'id', 'cep')
+    context['lista_fornecedores'] = json.dumps(list(lista_fornecedores))
+
+    if request.method == "POST":
+        button_type = request.POST.get("btnSubmit")
+
+        if button_type == 'cadastrarFornecedor':
+            try: 
+                nome = request.POST.get("nomeAdd")
+                cnpj = request.POST.get("cnpjAdd")
+                ie = request.POST.get("ieAdd")
+                if not ie:
+                    ie = ""
+                endereco = request.POST.get("enderecoAdd")
+                cidade = request.POST.get("cidadeAdd")
+                estado = request.POST.get("estadoAdd")
+                cep = request.POST.get("cepAdd")
+                telefone = request.POST.get("telefoneAdd")
+                email = request.POST.get("emailAdd")
+
+                cnpj_obj = CNPJ()
+                if not cnpj_obj.validate(cnpj):
+                    messages.error(request, "CNPJ inválido! Por favor, insira um CNPJ válido.")
+                    return redirect('sistema:clientes')
+
+                Fornecedor.objects.create(
+                    nome_empresa = nome,
+                    cnpj = cnpj,
+                    inscricao_estadual = ie,
+                    endereco = endereco,
+                    cidade = cidade,
+                    estado = estado,
+                    cep = cep,
+                    telefone = telefone,
+                    email = email
+                )
+                messages.success(request, "Fornecedor cadastrado com sucesso!")
+            except:
+                messages.error(request, "Ocorreu um erro ao cadastrar o Fornecedor. Verifique os dados e tente novamente!")
+                return redirect("sistema:fornecedores")
+        
+        elif button_type == "atualizarFornecedor":
+            try:
+                nome = request.POST.get("nomeEdit")
+                cnpj = request.POST.get("cnpjEdit")
+                ie = request.POST.get("ieEdit")
+                if not ie:
+                    ie = ""
+                endereco = request.POST.get("enderecoEdit")
+                cidade = request.POST.get("cidadeEdit")
+                estado = request.POST.get("estadoEdit")
+                cep = request.POST.get("cepEdit")
+                telefone = request.POST.get("telefoneEdit")
+                email = request.POST.get("emailEdit")
+                id_fornecedor = request.POST.get("idFornecedor")
+                print(id_fornecedor)
+
+                cnpj_obj = CNPJ()
+                if not cnpj_obj.validate(cnpj):
+                    messages.error(request, "CNPJ inválido! Por favor, insira um CNPJ válido.")
+                    return redirect('sistema:clientes')
+
+                fornecedor = get_object_or_404(Fornecedor, id=int(id_fornecedor))
+                print(nome, cnpj, ie, endereco, cidade, estado, cep, telefone, email, id_fornecedor)
+                fornecedor.nome_empresa = nome
+                fornecedor.cnpj = cnpj
+                fornecedor.inscricao_estadual = ie
+                fornecedor.endereco = endereco
+                fornecedor.cidade = cidade
+                fornecedor.estado = estado
+                fornecedor.cep = cep
+                fornecedor.telefone = telefone
+                fornecedor.email = email
+                fornecedor.save()
+                messages.success(request, "Fornecedor alterado com sucesso!")
+
+            except Exception as e:
+                messages.error(request, "Ocorreu um erro ao alterar o Fornecedor. Verifique os dados e tente novamente!")
+                print(e)
+            return redirect('sistema:fornecedores')
+        
+        elif button_type == "deletarFornecedor":
+            try:
+                id_fornecedor = request.POST.get("idForncedor")
+                fornecedor = get_object_or_404(Fornecedor, id=id_fornecedor)
+                fornecedor.delete()
+                messages.success(request, "Fornecedor excluído com sucesso!")
+                return redirect("sistema:fornecedores")
+            except: 
+                messages.error(request, "Ocorreu um erro ao excluir o Fornecedor. Verifique os dados e tente novamente!")
+                return redirect("sistema:fornecedores")
+
+
+
+    return render(request, 'fornecedores.html', context)
+
+
+def entradaDeNotas(request):
+
+    context={}
+
+    return render(request, 'entradaDeNotas.html', context)

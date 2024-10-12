@@ -399,6 +399,11 @@ td, th {
     table-layout: auto; /* Permite que as colunas se ajustem automaticamente */
 }
 
+.table-responsive {
+    overflow-x: auto; /* Adiciona rolagem horizontal */
+}
+
+
 @media screen and (max-width: 1400px) {
     
     .main-cadastrar-produto{

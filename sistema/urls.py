@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import homepage, Vendas, relatorios, Estoque, caixa, RelatorioDeVendas, RelatorioDeCaixa, cadastrarProduto, EditarProduto, clientes, fornecedores
+from .views import homepage, Vendas, relatorios, Estoque, caixa, RelatorioDeVendas, RelatorioDeCaixa, cadastrarProduto, EditarProduto, clientes, fornecedores, entradaDeNotas
 
 app_name="sistema"
 
@@ -15,4 +15,5 @@ urlpatterns = [
     path('editarproduto/<int:pk>', EditarProduto.as_view(), name="editarProduto"),
     path('clientes/', clientes, name="clientes"),
     path('fornecedores/', fornecedores, name="fornecedores"),
+    path('entradaDeNotas', entradaDeNotas, name="entradaDeNotas")
 ]

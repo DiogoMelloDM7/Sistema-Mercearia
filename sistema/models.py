@@ -99,7 +99,7 @@ from django.db import models
 class Fornecedor(models.Model):
     nome_empresa = models.CharField(max_length=255)
     cnpj = models.CharField(max_length=18, unique=True)
-    inscricao_estadual = models.CharField(max_length=20, null=True, blank=True)
+    inscricao_estadual = models.CharField(max_length=20, null=True, blank=True, default="")
     endereco = models.CharField(max_length=255)
     cidade = models.CharField(max_length=100)
     estado = models.CharField(max_length=30)
@@ -109,3 +109,21 @@ class Fornecedor(models.Model):
 
     def __str__(self):
         return self.nome_empresa
+
+class NotaDeMercadoria(models.Model):
+    numero_nota = models.CharField(max_length=50) 
+    valor = models.DecimalField(max_digits=10, decimal_places=2)  # Valor total da nota
+    fornecedor = models.ForeignKey(Fornecedor, on_delete=models.CASCADE, related_name='notas')
+    data = models.DateTimeField(default=timezone.now)
+    produtos = models.ManyToManyField(Produto, through='ItensNota')
+
+    def __str__(self):
+        return f"Nota {self.numero_nota} - {self.fornecedor.nome_empresa}"
+
+class ItensNota(models.Model):
+    nota = models.ForeignKey(NotaDeMercadoria, related_name="itens", on_delete=models.CASCADE)
+    produto = models.ForeignKey(Produto, related_name="produtos_da_nota", on_delete=models.CASCADE)
+    quantidade = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.quantidade} de {self.produto.nome} - Nota {self.nota.numero_nota}"

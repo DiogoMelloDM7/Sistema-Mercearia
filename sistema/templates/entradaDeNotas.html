@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block titulo %}
+Clientes
+{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div id="error-message" class="{% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% endif %}" style="display: none;">             
+                    <span>{{ message }}<span>
+        </div>
+    {% endfor %}
+{% endif %}
+<div class="container">
+
+</div>
+
+
+<script>
+    let clientes = JSON.parse('{{ clientes|safe }}')
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="{% static 'js/entradaDeNotas.js' %}"></script>
+{% endblock %}
