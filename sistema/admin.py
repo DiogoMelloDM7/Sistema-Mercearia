@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Venda, Produto, RelatorioCaixa, RelatorioVendas, ItensVenda, Credito, Debito, Cartao, Cliente, Fornecedor
+from .models import Venda, Produto, RelatorioCaixa, RelatorioVendas, ItensVenda, Credito, Debito, Cartao, Cliente, Fornecedor, NotaDeMercadoria, ItensNota
 
 # Register your models here.
 
@@ -13,3 +13,5 @@ admin.site.register(Debito)
 admin.site.register(Cartao)
 admin.site.register(Cliente)
 admin.site.register(Fornecedor)
+admin.site.register(NotaDeMercadoria)
+admin.site.register(ItensNota)

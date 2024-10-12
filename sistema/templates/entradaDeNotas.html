@@ -15,15 +15,82 @@ Clientes
         </div>
     {% endfor %}
 {% endif %}
-<div class="container">
+<div class="">
+    <!-- Button trigger modal -->
+     <div class="d-flex justify-content-evenly m-3">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalFornecedor" id="btn-Fornecedor">
+        Selecione o fornecedor
+        </button>
+
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalProdutos" id="btn-Produto">
+            Selecione o produto
+        </button>
+    </div>
+  
+  <!-- Modal -->
+    <div class="modal fade" id="ModalFornecedor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel"> Selecione o Fornecedor da nota</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input placeholder="Pesquise pelo nome do fornecedor" id="inputFornecedor" class="form-control">
+                <div class-"table-responsive">
+                <table id="tabelaFornecedor" class="table table-striped table-hover">
+                    <thead>
+                    </thead>
+
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalProdutos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel"> Selecione o(s) Produto(s) da nota</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input placeholder="Pesquise pelo nome do produto" id="inputProduto" class="form-control">
+                <div class-"table-responsive">
+                    <table id="tabelaProdutos" class="table table-striped table-hover">
+                        <thead>
+                        </thead>
+
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+
 
 </div>
 
 
 <script>
-    let clientes = JSON.parse('{{ clientes|safe }}')
+    let lista_fornecedores = JSON.parse('{{ lista_fornecedores|safe }}') 
+    let lista_produtos = JSON.parse('{{ lista_produtos|safe }}')
 </script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="{% static 'js/entradaDeNotas.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 {% endblock %}

@@ -684,5 +684,16 @@ def fornecedores(request):
 def entradaDeNotas(request):
 
     context={}
+    lista_fornecedores = Fornecedor.objects.all().values('nome_empresa', 'cnpj', 'inscricao_estadual', 'endereco', 'cidade', 'estado', 'cep', 'telefone', 'email', 'id')
+    lista_produtos = Produto.objects.all().values('nome', 'valor_venda', 'valor_custo', 'quantidade', 'grupo', 'quantidade_minima_para_pedido', 'id')
+
+    for produto in lista_produtos:
+        produto['valor_venda'] = float(produto['valor_venda'])
+        produto['valor_custo'] = float(produto['valor_custo'])
+    context['lista_fornecedores'] = json.dumps(list(lista_fornecedores))
+    context['lista_produtos'] = json.dumps(list(lista_produtos))
+
+
+    
 
     return render(request, 'entradaDeNotas.html', context)
