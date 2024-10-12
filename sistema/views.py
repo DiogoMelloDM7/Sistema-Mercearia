@@ -8,6 +8,7 @@ from datetime import date, datetime, timedelta
 from decimal import Decimal, ROUND_DOWN
 from django.http import JsonResponse
 import json
+from validate_docbr import CPF
 
 
 
@@ -100,7 +101,6 @@ class Vendas(ListView):
         cartao_pix_dinheiro = False
         if button_type == "confirm-sale":
             id_cliente_da_venda = request.POST.get("idCliente")
-            print(id_cliente_da_venda)
             if not id_cliente_da_venda:
                 messages.error(request, f"Por favor selecione um cliente para finalizar a venda!")
                 return render(request, self.template_name, context)            
@@ -151,7 +151,7 @@ class Vendas(ListView):
                 relatorio_venda = RelatorioVendas.objects.filter(data__date=data_hoje).first()
                 if not relatorio_venda:
                     relatorio_venda = RelatorioVendas.objects.create(valorfinal = 0)
-                venda = Venda.objects.create(relatorio = relatorio_venda, valor = 0)
+                venda = Venda.objects.create(relatorio = relatorio_venda, valor = 0, cliente=cliente)
                 for item in lista_vendas:
                     nome_produto = item[0]
                     quantidade = item[1]
@@ -513,6 +513,12 @@ def clientes(request):
                 telefone_cliente = request.POST.get("telefone")
                 email_cliente = request.POST.get("email")
                 id_cliente = request.POST.get("idCliente")
+
+                cpf_obj = CPF()
+                if not cpf_obj.validate(cpf_cliente):
+                    messages.error(request, "CPF inválido! Por favor, insira um CPF válido.")
+                    return redirect('sistema:clientes')
+
                 cliente = get_object_or_404(Cliente, id=id_cliente)
                 cliente.nome = nome_cliente
                 cliente.rua = rua_cliente
@@ -537,6 +543,12 @@ def clientes(request):
                 cpf_cliente = request.POST.get("cpfadd")
                 telefone_cliente = request.POST.get("telefoneadd")
                 email_cliente = request.POST.get("emailadd")
+
+                cpf_obj = CPF()
+                if not cpf_obj.validate(cpf_cliente):
+                    messages.error(request, "CPF inválido! Por favor, insira um CPF válido.")
+                    return redirect('sistema:clientes')
+
                 Cliente.objects.create(
                 nome = nome_cliente,
                 rua = rua_cliente,
@@ -567,3 +579,8 @@ def clientes(request):
             
 
     return render(request, "clientes.html", context)
+
+
+def fornecedores(request):
+
+    return render(request, 'fornecedores.html')

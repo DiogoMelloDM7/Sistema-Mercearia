@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block titulo %}
+Fornecedores
+{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div id="error-message" class="{% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% endif %}" style="display: none;">             
+                    <span>{{ message }}<span>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="container">
+    <div class="row">
+        <div id="opcoes-cliente" class="col-md-4 p-3 m-3">
+            <div class="">
+                <button class="btn btn-success mb-5" style="width: 200px; height:75px; font-size:1.3em;" onclick="()">Cadastrar Fornecedor</button>
+            </div>
+            <div>
+                <button class="btn btn-primary mb-5" style="width: 200px; height:75px;font-size:1.3em;" onclick="()">Editar Fornecedor</button>
+            </div>
+            <div>
+                <button class="btn btn-warning mb-5" style="width: 200px; height:75px;font-size:1.3em;" onclick="()">Visualizar Fornecedor</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="informacoes-cliente" class="col-md-8 p-2 m-2">
+        <div id="tabelaDeFornecedores" style="display: none;">
+            <input type="text" id="clienteNome" placeholder="Informe o nome do Fornecedor" class="form-control mb-2">
+            <table id="tabelaFornecedores" class="table table-striped">
+                <thead>
+                    
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>  
+
+        <form id="formEditar" style="display:block;" method="post">
+            
+            <input type="text" id="fornecedorEditarNome" placeholder="Informe o nome do fornecedor" class="form-control mb-2">
+            <table id="tabelaEdicaoFornecedores" class="table table-striped">
+                <thead>
+                    Tabela
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+            
+            {% csrf_token %}
+            <h1 class="fs-2">Editar Fornecedor</h1>
+            <div class="mb-3">
+                <label for="nomeEdit" class="form-label">Nome</label>
+                <input type="text" class="form-control" id="nomeEdit" name="nomeEdit" required>
+                <label for="cnpjEdit" class="form-label">CNPJ</label>
+                <input type="text" class="form-control" id="cnpjEdit" name="cnpjEdit" pattern="\d{14}" maxlength="14" required title="Por favor, insira apenas 14 dígitos." placeholder="Digite apenas os números">
+                <label for="ieEdit" class="form-label">IE</label>
+                <input type="text" class="form-control" id="ieEdit" name="ieEdit">
+                <label for="enderecoEdit" class="form-label">Endereço</label>
+                <input type="text" class="form-control" id="enderecoEdit" name="enderecoEdit" required>
+                <label for="cidadeEdit" class="form-label">Cidade</label>
+                <input type="text" class="form-control" id="cidadeEdit" name="cidadeEdit">
+                <label for="estadoEdit" class="form-label">Estado</label>
+                <input type="text" class="form-control" id="estadoEdit" name="estadoEdit">
+                <label for="cepEdit" class="form-label">CEP</label>
+                <input type="email" class="form-control" id="cepEdit" name="cepEdit" required>
+                <label for="telefoneEdit" class="form-label">Telefone</label>
+                <input type="email" class="form-control" id="telefoneEdit" name="telefoneEdit" pattern="\d{8,20}" maxlength="20" required title="Por favor, insira apenas dígitos.">
+                <label for="emailEdit" class="form-label">E-mail</label>
+                <input type="email" class="form-control" id="emailEdit" name="emailEdit" required>
+                <input type="hidden" id="idFornecedor" name="ifFornecedor">
+                <div class="d-flex justify-content-between">
+                    <button type="submit" name="btnSubmit" value="atualizarFornecedor" class="btn btn-primary btn-lg mt-2">Atualizar Fornecedor</button>
+                    <button type="submit" name="btnSubmit" value="deletarFornecedor" class="btn btn-danger btn-lg mt-2">Excluir Fornecedor</button>
+                </div>
+            </div>
+        </form>
+
+
+    </div>
+
+</div>
+
+
+
+<script>
+    let clientes = JSON.parse('{{ clientes|safe }}')
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="{% static 'js/fornecedores.js' %}"></script>
+{% endblock %}

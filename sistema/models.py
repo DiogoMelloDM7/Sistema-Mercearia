@@ -21,7 +21,7 @@ class Venda(models.Model):
     data = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f"Venda {self.pk} - Cliente"
+        return f"Venda {self.pk} - {self.cliente.nome}"
     
 
 class ItensVenda(models.Model):
@@ -86,7 +86,7 @@ class Cliente(models.Model):
     rua = models.CharField(max_length=100, null=False, blank=False)
     bairro = models.CharField(max_length=100, null=False, blank=False)
     cidade = models.CharField(max_length=100, null=False, blank=False)
-    cpf = models.CharField(max_length=100, null=False, blank=False)
+    cpf = models.CharField(max_length=100, null=False, blank=False, unique=True)
     telefone = models.CharField(max_length=100, null=False, blank=False)
     email = models.CharField(max_length=100, null=False, blank=False)
 
@@ -94,3 +94,18 @@ class Cliente(models.Model):
     def __str__(self):
         return self.nome
     
+from django.db import models
+
+class Fornecedor(models.Model):
+    nome_empresa = models.CharField(max_length=255)
+    cnpj = models.CharField(max_length=18, unique=True)
+    inscricao_estadual = models.CharField(max_length=20, null=True, blank=True)
+    endereco = models.CharField(max_length=255)
+    cidade = models.CharField(max_length=100)
+    estado = models.CharField(max_length=30)
+    cep = models.CharField(max_length=9)
+    telefone = models.CharField(max_length=20)
+    email = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.nome_empresa
