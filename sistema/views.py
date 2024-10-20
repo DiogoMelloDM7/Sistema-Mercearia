@@ -697,3 +697,19 @@ def entradaDeNotas(request):
     
 
     return render(request, 'entradaDeNotas.html', context)
+
+
+def salvar_entrada(request):
+    if request.method == 'POST':
+        dados = json.loads(request.body)
+        itens_nota = dados.get('itensNota', [])
+        fornecedor_nota = dados.get('fornecedorNota', {})
+        for item in itens_nota:
+            
+            produto_id = item.get('id')
+            quantidade = item.get('quantidadeInput')
+            valor_total = item.get('valorTotalProdutoNota')
+        print(itens_nota, fornecedor_nota)
+        return JsonResponse({'status': 'success'})
+
+    return JsonResponse({'status': 'invalid request'}, status=400)

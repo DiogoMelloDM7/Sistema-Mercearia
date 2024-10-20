@@ -2,11 +2,12 @@ console.log(lista_fornecedores);
 console.log(lista_produtos);
 
 let itensNota = [];
-let fornecedorNota = [];
+let fornecedorNota = null;
 let valorTotalNota = 0
 let qtde = 0;
 let valorCusto = 0;
 let valorTotalProduto = 0;
+let btnCalculaValor = null;
 
 function constroiTabelaProdutos(){
     $("#tabelaProdutos thead").empty().append(`
@@ -173,37 +174,55 @@ $(document).on("click", ".add-fornecedor-btn", function(){
 $(document).on("click", ".add-produto-btn", function(){
     let indexProduto = $(this).data('index');
     itensNota.push(lista_produtos[indexProduto])
-    lista_produtos[indexProduto].quantidadeInput = 0
-    lista_produtos[indexProduto].valorTotalProdutoNota = 0
     console.log(itensNota)
     constroiTabelaItensNota();
 })
 
 function constroiTabelaItensNota(){
-    $("#tabelaItensNota thead").empty().append(`
-        <tr>    
-            <th>Fornecedor</th>
-            <th>CNPJ</th>
-            <th>Endereço</th>
-            <th>Cidade</th>
-            <th>Estado</th>
-        </tr>
-        <tr>    
-            <td>${fornecedorNota.nome_empresa}</td>
-            <td>${fornecedorNota.cnpj}</td>
-            <td>${fornecedorNota.endereco}</td>
-            <td>${fornecedorNota.cidade}</td>
-            <td>${fornecedorNota.estado}</td>
-        </tr>
-         <tr>    
-            <th>Produto</th>
-            <th>Grupo</th>
-            <th>Preço de Venda</th>
-            <th>Preço de Custo</th>
-            <th>Quantidade</th>
-           
-        </tr>
-    `)
+    if(fornecedorNota){
+        $("#tabelaItensNota thead").empty().append(`
+            <tr>    
+                <th>Fornecedor</th>
+                <th>CNPJ</th>
+                <th>Endereço</th>
+                <th>Cidade</th>
+                <th>Estado</th>
+                <th>Número Nota</th>
+            </tr>
+            <tr>    
+                <td>${fornecedorNota.nome_empresa}</td>
+                <td>${fornecedorNota.cnpj}</td>
+                <td>${fornecedorNota.endereco}</td>
+                <td>${fornecedorNota.cidade}</td>
+                <td>${fornecedorNota.estado}</td>
+                <td>
+                    <input placeholder="Insira o número da nota" text="number" id="numeroNotaFornecedor" value="${fornecedorNota.numeroNota ? fornecedorNota.numeroNota : ''}">
+                </td>
+            </tr>
+             <tr>    
+                <th>Produto</th>
+                <th>Grupo</th>
+                <th>Preço de Venda</th>
+                <th>Preço de Custo</th>
+                <th>Quantidade</th>
+                <th>Ação</th>
+               
+            </tr>
+        `)
+    }else{
+        $("#tabelaItensNota thead").empty().append(`
+             <tr>    
+                <th>Produto</th>
+                <th>Grupo</th>
+                <th>Preço de Venda</th>
+                <th>Preço de Custo</th>
+                <th>Quantidade</th>
+                <th>Ação</th>
+               
+            </tr>
+        `)
+    }
+    
 
     $("#tabelaItensNota tbody").empty()
     itensNota.forEach(function(item, index){
@@ -216,31 +235,99 @@ function constroiTabelaItensNota(){
                 <td>
                     <input type="number" placeholder="Informe a qtde" class="qtde-input" data-index="${index}">
                 </td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-danger btn-delete-item" data-index="${index}"><i class="bi bi-trash-fill"></i></button>
+                </td>
             </tr>    
         `)
+    })
         $(document).on("click", ".qtde-input", function(){
             let indexInput = $(this).data("index");
-            $(this).on("keyup", function(){
+            $(this).on("blur", function(){
                 qtde = parseFloat($(this).val())
+                qtde_antiga = null
                 itensNota[indexInput].quantidadeInput = qtde
+                if (qtde_antiga){
+                    valorTotalNota -= itensNota[indexInput].valorTotalProdutoNota
+                }if(itensNota[indexInput].quantidadeInput){
+                    qtde_antiga = qtde
+                }
                 valorCusto = parseFloat(itensNota[indexInput].valor_custo); 
                 itensNota[indexInput].valorTotalProdutoNota = itensNota[indexInput].quantidadeInput * valorCusto
+                console.log(valorTotalNota, itensNota[indexInput].valorTotalProdutoNota)
+                
+
+        
             })
         
-        valorTotalNota += valorTotalProduto
-        })
+        
     })
 
     valorTotalNota = itensNota.reduce(function(acumulador, item) {
-        return acumulador + item.valorTotalProdutoNota;
+       return acumulador + item.valorTotalProdutoNota;
     }, 0);
-
+    if(isNaN(valorTotalNota)){
+        valorTotalNota = 0;
+    }
     $("#tabelaItensNota tfoot").empty().append(`
         <tr>
-            <th colspan="2">Valor Total</th>
+            <th colspan="3">Valor Total</th>
             <th colspan="3" id="valorTotalNota">${valorTotalNota.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</th>
         </tr>
     `)
+
+    $("#divTabela").empty().append(`
+        <button class="btn btn-sm btn-success btn-calcula-valores">Calcular Valores</button>     
+    `)
+    if(btnCalculaValor){
+        $("#divTabela").empty().append(`
+            <button class="btn btn-sm btn-success btn-calcula-valores">Calcular Valores</button>  
+            <button class="btn btn-sm btn-warning btn-finaliza-entrada">Realizar Entrada</button> 
+        `)
+    }
+
+    $(document).on("click", ".btn-calcula-valores", function(){
+        btnCalculaValor = true;
+        fornecedorNota.numeroNota = $("#numeroNotaFornecedor").val()
+        constroiTabelaItensNota()
+    })
+
+    $(document).off("click", ".btn-finaliza-entrada").on("click", ".btn-finaliza-entrada", function(){
+        if(!fornecedorNota.numeroNota){
+            alert("Por favor informe o número da nota!");
+            return;
+        }
+        if(!fornecedorNota){
+            alert("Por favor selecione um fornecedor!");
+            return;
+        }
+        if(itensNota.length < 1){
+            alert("Por favor selecione ao menos um produto!");
+            return;
+        }
+        $.ajax({
+            url: '/salvar-entrada/',  // URL configurada no backend
+            type: 'POST',
+            headers: { 'X-CSRFToken': csrfToken },  // Inclua o token CSRF
+            contentType: 'application/json',
+            data: JSON.stringify({
+                fornecedorNota: fornecedorNota,
+                itensNota: itensNota
+            }),
+            success: function(response) {
+                if (response.status === 'success') {
+                    alert("Entrada de nota realizada com sucesso!");
+                } else {
+                    alert("Houve um erro na hora de confirmar entrada, por favor tente novamente!");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log(error);
+                alert("Erro na requisição AJAX.");
+            }
+        });
+    });
+    
     console.log(valorTotalNota)
 }
 
@@ -253,7 +340,7 @@ function salvarValoresInputs() {
     $(".qtde-input").each(function() {
         let index = $(this).data("index");
         let valor = $(this).val();
-        valoresInputs[index] = valor; // Armazena o valor no objeto valoresInputs
+        valoresInputs[`produto${index}`] = valor; // Armazena o valor no objeto valoresInputs
     });
 }
 
@@ -264,6 +351,7 @@ function restaurarValoresInputs() {
         if (valoresInputs[index] !== undefined) {
             $(this).val(valoresInputs[index]); // Restaura o valor salvo
         }
+        console.log(valoresInputs)
     });
 }
 
@@ -279,7 +367,24 @@ $(document).on("click", '.add-fornecedor-btn', function(){
 
 $(document).on("click", '.add-produto-btn', function(){
     $('#btn-close-produto').trigger('click');
+    itensNota.forEach(function(item, index){
+        let qtdeInput = $(`.qtde-input[data-index='${index}']`);
+        qtdeInput.val(item.quantidadeInput)
+    })
+    
     salvarValoresInputs();
     restaurarValoresInputs();
-    $('.add-fornecedor-btn').trigger('click');
 })
+
+$(document).on("click", ".btn-delete-item", function(){
+    let indexDelete = $(this).data("index");
+    itensNota[indexDelete].quantidadeInput = 0
+    itensNota.splice(indexDelete, 1);
+    delete valoresInputs[`produto${indexDelete}`]
+    btnCalculaValor = null;
+    restaurarValoresInputs();
+    constroiTabelaItensNota();
+    console.log(itensNota)
+    
+})
+
