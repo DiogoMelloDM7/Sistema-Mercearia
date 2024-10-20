@@ -317,13 +317,14 @@ function constroiTabelaItensNota(){
             success: function(response) {
                 if (response.status === 'success') {
                     alert("Entrada de nota realizada com sucesso!");
+                    window.location.reload();
                 } else {
                     alert("Houve um erro na hora de confirmar entrada, por favor tente novamente!");
                 }
             },
             error: function(xhr, status, error) {
                 console.log(error);
-                alert("Erro na requisição AJAX.");
+                alert("Verifique se todos os campos estão preenchidos corretamente e tente novamente");
             }
         });
     });

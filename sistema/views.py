@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import DetailView, ListView
-from .models import RelatorioVendas, RelatorioCaixa, Produto, Credito, Debito, Venda, ItensVenda, Cartao, Cliente, Fornecedor
+from .models import RelatorioVendas, RelatorioCaixa, Produto, Credito, Debito, Venda, ItensVenda, Cartao, Cliente, Fornecedor, ItensNota, NotaDeMercadoria
 from django.contrib import messages
 from django.urls import reverse
 from django.db.models import Q, Sum
@@ -704,12 +704,50 @@ def salvar_entrada(request):
         dados = json.loads(request.body)
         itens_nota = dados.get('itensNota', [])
         fornecedor_nota = dados.get('fornecedorNota', {})
+        valor_total_nota = Decimal(0)
+
+        # Recuperar o fornecedor
+        try:
+            fornecedor = Fornecedor.objects.get(id=fornecedor_nota['id'])
+        except Fornecedor.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Fornecedor não encontrado'}, status=404)
+
+        # Criar a Nota de Mercadoria
+        nota_mercadoria = NotaDeMercadoria.objects.create(
+            numero_nota=fornecedor_nota['numeroNota'],
+            valor=valor_total_nota,
+            fornecedor=fornecedor,
+        )
+
+        # Iterar pelos itens da nota, atualizando os produtos e criando os itens da nota
         for item in itens_nota:
-            
             produto_id = item.get('id')
-            quantidade = item.get('quantidadeInput')
-            valor_total = item.get('valorTotalProdutoNota')
-        print(itens_nota, fornecedor_nota)
+            try:
+                produto = Produto.objects.get(id=produto_id)
+                quantidade = int(item.get('quantidadeInput'))
+                valor_total_produto = Decimal(item.get('valorTotalProdutoNota'))
+
+                # Atualizar a quantidade do produto em estoque
+                produto.quantidade += quantidade
+                produto.save()
+
+                # Atualizar o valor total da nota
+                valor_total_nota += valor_total_produto
+
+                # Criar o item da nota associando o produto à nota
+                ItensNota.objects.create(
+                    nota=nota_mercadoria,
+                    produto=produto,
+                    quantidade=quantidade
+                )
+
+            except Produto.DoesNotExist:
+                return JsonResponse({'status': 'error', 'message': f'Produto com ID {produto_id} não encontrado'}, status=404)
+
+        # Após iterar por todos os itens, atualizar o valor total da nota
+        nota_mercadoria.valor = valor_total_nota
+        nota_mercadoria.save()
+
         return JsonResponse({'status': 'success'})
 
     return JsonResponse({'status': 'invalid request'}, status=400)
